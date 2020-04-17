@@ -1,9 +1,3 @@
----
-output: github_document
----
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # kableExtra Cookbook
 
 This repo is the home of a very bare bones (empty, even!) cookbook that will contain snippets and examples of how to use the [kableExtra](https://haozhu233.github.io/kableExtra/) R package, which can create highly-customized tables in PDF and HTML.
