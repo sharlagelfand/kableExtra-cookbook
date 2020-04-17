@@ -1,0 +1,12 @@
+--- 
+title: "kableExtra Cookbook"
+author: "Sharla Gelfand"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+---
+
+# Prerequisites
+
+If you want to render to PDF... install [tinytex](https://yihui.org/tinytex/).

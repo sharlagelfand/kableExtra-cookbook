@@ -1,0 +1,13 @@
+# How to...
+
+```{r, child = "_how-to-full-width.Rmd"}
+```
+
+```{r, child = "_how-to-top-header.Rmd"}
+```
+
+```{r, child = "_how-to-bold.Rmd"}
+```
+
+```{r, child = "_how-to-dynamically.Rmd"}
+```

@@ -1,0 +1,12 @@
+# The basics
+
+```{r, child = "_how-to-basic-table.Rmd"}
+```
+
+```{r, child = "_how-to-column-names.Rmd"}
+```
+
+```{r, child = "_how-to-column-alignment.Rmd"}
+```
+
+## Add a caption
