@@ -40,14 +40,9 @@ top_10_data <- us_contagious_diseases %>%
 
 Then, you can use the `kable` function to create a basic PDF table:
 
-```{r echo = 1:2}
+```{r}
 top_10_data %>% 
-  kable(format = "latex") 
-
-top_10_data %>% 
-  kable(format = "latex") %>%
-  save_kable(file = "pdf_table_figures/ex_1.png")
-include_graphics(path = "pdf_table_figures/ex_1.png")
+  kable() 
 ```
 
 The `booktabs = TRUE` option, if you include it in the `kable` function call, will give 
@@ -55,12 +50,7 @@ some cleaner default formatting for the table:
 
 ```{r echo = 1:2}
 top_10_data %>% 
-  kable(format = "latex", booktabs = TRUE) 
-
-top_10_data %>% 
-  kable(format = "latex", booktabs = TRUE) %>%
-  save_kable(file = "pdf_table_figures/ex_2.png")
-include_graphics(path = "pdf_table_figures/ex_2.png")
+  kable(booktabs = TRUE) 
 ```
 
 

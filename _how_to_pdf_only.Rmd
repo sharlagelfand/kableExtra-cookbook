@@ -1,0 +1,45 @@
+## Take advantage of PDF-only features
+
+Example code that will allow us to embed PDF-only table output. This 
+uses a couple of basic examples of doing this, with code from the `dslabs` package. 
+
+```{r}
+library(tidyverse)
+library(dslabs)
+data("us_contagious_diseases")
+top_10_data <- us_contagious_diseases %>% 
+  filter(disease == "Pertussis") %>% 
+  group_by(state) %>% 
+  summarize(total_count = sum(count)) %>% 
+  arrange(desc(total_count)) %>% 
+  slice(1:10) 
+```
+
+Then, you can use the `kable` function to create a basic PDF table:
+
+```{r echo = 1:2}
+top_10_data %>% 
+  kable(format = "latex") 
+
+top_10_data %>% 
+  kable(format = "latex") %>%
+  save_kable(file = "pdf_table_figures/ex_1.png")
+include_graphics(path = "pdf_table_figures/ex_1.png")
+```
+
+The `booktabs = TRUE` option, if you include it in the `kable` function call, will give 
+some cleaner default formatting for the table: 
+
+```{r echo = 1:2}
+top_10_data %>% 
+  kable(format = "latex", booktabs = TRUE) 
+
+top_10_data %>% 
+  kable(format = "latex", booktabs = TRUE) %>%
+  save_kable(file = "pdf_table_figures/ex_2.png")
+include_graphics(path = "pdf_table_figures/ex_2.png")
+```
+
+
+
+

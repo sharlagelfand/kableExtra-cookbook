@@ -147,6 +147,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2" data-path="how-to.html"><a href="how-to.html#add-a-top-header"><i class="fa fa-check"></i><b>4.2</b> Add a top header</a></li>
 <li class="chapter" data-level="4.3" data-path="how-to.html"><a href="how-to.html#bold-columns-or-rows"><i class="fa fa-check"></i><b>4.3</b> Bold columns or rows</a></li>
 <li class="chapter" data-level="4.4" data-path="how-to.html"><a href="how-to.html#dynamically-make-changes"><i class="fa fa-check"></i><b>4.4</b> Dynamically make changes</a></li>
+<li class="chapter" data-level="4.5" data-path="how-to.html"><a href="how-to.html#take-advantage-of-pdf-only-features"><i class="fa fa-check"></i><b>4.5</b> Take advantage of PDF-only features</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="wild-caught-tables.html"><a href="wild-caught-tables.html"><i class="fa fa-check"></i><b>5</b> Wild-caught Tables</a></li>
 <li class="divider"></li>
@@ -222,15 +223,199 @@ code to create the dataframe with the data you’d like to show in the table:</p
 <h3><span class="header-section-number">3.1.2</span> Creating a basic table</h3>
 <p>Then, you can use the <code>kable</code> function to create a basic PDF table:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>) </a></code></pre></div>
-
-<p><img src="pdf_table_figures/ex_1.png" width="300" /></p>
+<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">kable</span>() </a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+state
+</th>
+<th style="text-align:right;">
+total_count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
 <p>The <code>booktabs = TRUE</code> option, if you include it in the <code>kable</code> function call, will give
 some cleaner default formatting for the table:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>, <span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
-
-<p><img src="pdf_table_figures/ex_2.png" width="299" /></p>
+<a class="sourceLine" id="cb8-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+state
+</th>
+<th style="text-align:right;">
+total_count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="change-column-names" class="section level2">

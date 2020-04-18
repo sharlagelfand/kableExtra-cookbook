@@ -11,3 +11,6 @@
 
 ```{r, child = "_how-to-dynamically.Rmd"}
 ```
+
+```{r, child = "_how_to_pdf_only.Rmd"}
+```
