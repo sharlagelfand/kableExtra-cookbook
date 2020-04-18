@@ -29,4 +29,56 @@ top_10_data %>%
   row_spec(row = 0, italic = TRUE)
 ```
 
+If you would like to underline the column headers, you can set `underline = TRUE` in the
+`row_spec` call for row 0:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases")) %>% 
+  row_spec(row = 0, underline = TRUE)
+```
+
+You can change the color of the column names by using the `color` option in the 
+`row_spec` call:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases")) %>% 
+  row_spec(row = 0, color = "dodgerblue")
+```
+
+This function uses the R colornames, so you can check out those at sites like
+http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf. 
+It will also accept colors specified by hexadecimal code in the "#BBBBBB" format:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases")) %>% 
+  row_spec(row = 0, color = "#FF5733")
+```
+
+You can check out websites on hexadecimal color codes at places like 
+https://htmlcolorcodes.com/ to learn more about using these conventions to specify 
+the color.
+
+If you'd like to change the background color and the text color, you can 
+add a specification for the "background" option in the `row_spec` call for row 0:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases")) %>% 
+  row_spec(row = 0, color = "white", background = "#FF5733")
+```
+
+You can change the font size of the column names, without changing the font size for
+the rest of the table, with the `font_size` parameter in `row_spec` for row 0. The
+default text size is somewhere in the "14" range, so pick larger numbers to make the
+text larger in the column names and smaller numbers to make the text smaller.
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases")) %>% 
+  row_spec(row = 0, font_size = 20)
+```
+
 ### Adding footnotes to column names

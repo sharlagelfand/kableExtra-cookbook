@@ -633,6 +633,507 @@ Illinois
 </tr>
 </tbody>
 </table>
+<p>If you would like to underline the column headers, you can set <code>underline = TRUE</code> in the
+<code>row_spec</code> call for row 0:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, <span class="st">&quot;Total Pertussis Cases&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="st">  </span><span class="kw">row_spec</span>(<span class="dt">row =</span> <span class="dv">0</span>, <span class="dt">underline =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;text-decoration: underline;">
+State
+</th>
+<th style="text-align:right;text-decoration: underline;">
+Total Pertussis Cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
+<p>You can change the color of the column names by using the <code>color</code> option in the
+<code>row_spec</code> call:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, <span class="st">&quot;Total Pertussis Cases&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="st">  </span><span class="kw">row_spec</span>(<span class="dt">row =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;dodgerblue&quot;</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;color: dodgerblue !important;">
+State
+</th>
+<th style="text-align:right;color: dodgerblue !important;">
+Total Pertussis Cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function uses the R colornames, so you can check out those at sites like
+<a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a>.
+It will also accept colors specified by hexadecimal code in the “#BBBBBB” format:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, <span class="st">&quot;Total Pertussis Cases&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="st">  </span><span class="kw">row_spec</span>(<span class="dt">row =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;#FF5733&quot;</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;color: #FF5733 !important;">
+State
+</th>
+<th style="text-align:right;color: #FF5733 !important;">
+Total Pertussis Cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
+<p>You can check out websites on hexadecimal color codes at places like
+<a href="https://htmlcolorcodes.com/" class="uri">https://htmlcolorcodes.com/</a> to learn more about using these conventions to specify
+the color.</p>
+<p>If you’d like to change the background color and the text color, you can
+add a specification for the “background” option in the <code>row_spec</code> call for row 0:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, <span class="st">&quot;Total Pertussis Cases&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="st">  </span><span class="kw">row_spec</span>(<span class="dt">row =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">background =</span> <span class="st">&quot;#FF5733&quot;</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;color: white !important;background-color: #FF5733 !important;">
+State
+</th>
+<th style="text-align:right;color: white !important;background-color: #FF5733 !important;">
+Total Pertussis Cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
+<p>You can change the font size of the column names, without changing the font size for
+the rest of the table, with the <code>font_size</code> parameter in <code>row_spec</code> for row 0. The
+default text size is somewhere in the “14” range, so pick larger numbers to make the
+text larger in the column names and smaller numbers to make the text smaller.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, <span class="st">&quot;Total Pertussis Cases&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="st">  </span><span class="kw">row_spec</span>(<span class="dt">row =</span> <span class="dv">0</span>, <span class="dt">font_size =</span> <span class="dv">20</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;font-size: 20px;">
+State
+</th>
+<th style="text-align:right;font-size: 20px;">
+Total Pertussis Cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="adding-footnotes-to-column-names" class="section level3">
 <h3><span class="header-section-number">3.2.3</span> Adding footnotes to column names</h3>
