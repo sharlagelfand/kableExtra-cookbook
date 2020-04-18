@@ -1,1 +1,67 @@
 ## Create a basic table
+
+```{r message = FALSE, warning = FALSE}
+library(knitr)
+library(kableExtra)
+```
+
+### Example data
+
+You can read in some data from the `dslabs` package on infectious disease cases in 
+US states and check it out:
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(dslabs)
+data("us_contagious_diseases")
+
+us_contagious_diseases %>% 
+  slice(1:3)
+
+us_contagious_diseases %>% 
+  summary()
+```
+
+With this data, you can 
+create a basic table with the total counts of pertussis by state over the period
+of the data (1928--2011), limiting to the top 10 states. First, you can use `tidyverse`
+code to create the dataframe with the data you'd like to show in the table:
+
+```{r}
+top_10_data <- us_contagious_diseases %>% 
+  filter(disease == "Pertussis") %>% 
+  group_by(state) %>% 
+  summarize(total_count = sum(count)) %>% 
+  arrange(desc(total_count)) %>% 
+  slice(1:10) 
+```
+
+### Creating a basic table
+
+Then, you can use the `kable` function to create a basic PDF table:
+
+```{r echo = 1:2}
+top_10_data %>% 
+  kable(format = "latex") 
+
+top_10_data %>% 
+  kable(format = "latex") %>%
+  save_kable(file = "pdf_table_figures/ex_1.png")
+include_graphics(path = "pdf_table_figures/ex_1.png")
+```
+
+The `booktabs = TRUE` option, if you include it in the `kable` function call, will give 
+some cleaner default formatting for the table: 
+
+```{r echo = 1:2}
+top_10_data %>% 
+  kable(format = "latex", booktabs = TRUE) 
+
+top_10_data %>% 
+  kable(format = "latex", booktabs = TRUE) %>%
+  save_kable(file = "pdf_table_figures/ex_2.png")
+include_graphics(path = "pdf_table_figures/ex_2.png")
+```
+
+
+
