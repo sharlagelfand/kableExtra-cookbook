@@ -1,1 +1,11 @@
 ## Change column names
+
+By default, each column will have the same name as the column name in the data
+that is input to `kable`. You can easily change those, though, with the 
+`col.names` option. You just put in a character vector with as many values as you 
+have columns, giving the names you would prefer:
+
+```{r echo = 1:2}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases")) 
+```

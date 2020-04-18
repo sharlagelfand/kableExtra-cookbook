@@ -420,6 +420,106 @@ Illinois
 </div>
 <div id="change-column-names" class="section level2">
 <h2><span class="header-section-number">3.2</span> Change column names</h2>
+<p>By default, each column will have the same name as the column name in the data
+that is input to <code>kable</code>. You can easily change those, though, with the
+<code>col.names</code> option. You just put in a character vector with as many values as you
+have columns, giving the names you would prefer:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, <span class="st">&quot;Total Pertussis Cases&quot;</span>)) </a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+State
+</th>
+<th style="text-align:right;">
+Total Pertussis Cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="change-the-column-alignment" class="section level2">
 <h2><span class="header-section-number">3.3</span> Change the column alignment</h2>
