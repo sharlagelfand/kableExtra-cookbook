@@ -50,6 +50,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -138,7 +139,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1.1" data-path="the-basics.html"><a href="the-basics.html#example-data"><i class="fa fa-check"></i><b>3.1.1</b> Example data</a></li>
 <li class="chapter" data-level="3.1.2" data-path="the-basics.html"><a href="the-basics.html#creating-a-basic-table"><i class="fa fa-check"></i><b>3.1.2</b> Creating a basic table</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="the-basics.html"><a href="the-basics.html#change-column-names"><i class="fa fa-check"></i><b>3.2</b> Change column names</a></li>
+<li class="chapter" data-level="3.2" data-path="the-basics.html"><a href="the-basics.html#change-column-names"><i class="fa fa-check"></i><b>3.2</b> Change column names</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="the-basics.html"><a href="the-basics.html#basics-of-changing-column-names"><i class="fa fa-check"></i><b>3.2.1</b> Basics of changing column names</a></li>
+<li class="chapter" data-level="3.2.2" data-path="the-basics.html"><a href="the-basics.html#changing-formatting-in-column-names"><i class="fa fa-check"></i><b>3.2.2</b> Changing formatting in column names</a></li>
+<li class="chapter" data-level="3.2.3" data-path="the-basics.html"><a href="the-basics.html#adding-footnotes-to-column-names"><i class="fa fa-check"></i><b>3.2.3</b> Adding footnotes to column names</a></li>
+</ul></li>
 <li class="chapter" data-level="3.3" data-path="the-basics.html"><a href="the-basics.html#change-the-column-alignment"><i class="fa fa-check"></i><b>3.3</b> Change the column alignment</a></li>
 <li class="chapter" data-level="3.4" data-path="the-basics.html"><a href="the-basics.html#add-a-caption"><i class="fa fa-check"></i><b>3.4</b> Add a caption</a></li>
 </ul></li>
@@ -420,6 +425,8 @@ Illinois
 </div>
 <div id="change-column-names" class="section level2">
 <h2><span class="header-section-number">3.2</span> Change column names</h2>
+<div id="basics-of-changing-column-names" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Basics of changing column names</h3>
 <p>By default, each column will have the same name as the column name in the data
 that is input to <code>kable</code>. You can easily change those, though, with the
 <code>col.names</code> option. You just put in a character vector with as many values as you
@@ -520,6 +527,116 @@ Illinois
 </tr>
 </tbody>
 </table>
+</div>
+<div id="changing-formatting-in-column-names" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Changing formatting in column names</h3>
+<p>The <code>kableExtra</code> package includes a <code>row_spec</code> function. This will make changes to
+the formatting of a specific row in the table.</p>
+<p>You can use this for any row, and that includes the row with the column headers.
+The <code>kableExtra</code> conventions consider this as row 0.</p>
+<p>For example, you can put the column headers in italics by setting <code>italic = TRUE</code>
+in a <code>row_spec</code> call for row 0:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, <span class="st">&quot;Total Pertussis Cases&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="st">  </span><span class="kw">row_spec</span>(<span class="dt">row =</span> <span class="dv">0</span>, <span class="dt">italic =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;font-style: italic;">
+State
+</th>
+<th style="text-align:right;font-style: italic;">
+Total Pertussis Cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="adding-footnotes-to-column-names" class="section level3">
+<h3><span class="header-section-number">3.2.3</span> Adding footnotes to column names</h3>
+</div>
 </div>
 <div id="change-the-column-alignment" class="section level2">
 <h2><span class="header-section-number">3.3</span> Change the column alignment</h2>

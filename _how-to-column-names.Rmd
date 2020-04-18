@@ -1,11 +1,32 @@
 ## Change column names
 
+### Basics of changing column names
+
 By default, each column will have the same name as the column name in the data
 that is input to `kable`. You can easily change those, though, with the 
 `col.names` option. You just put in a character vector with as many values as you 
 have columns, giving the names you would prefer:
 
-```{r echo = 1:2}
+```{r}
 top_10_data %>% 
   kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases")) 
 ```
+
+### Changing formatting in column names
+
+The `kableExtra` package includes a `row_spec` function. This will make changes to 
+the formatting of a specific row in the table. 
+
+You can use this for any row, and that includes the row with the column headers. 
+The `kableExtra` conventions consider this as row 0.
+
+For example, you can put the column headers in italics by setting `italic = TRUE`
+in a `row_spec` call for row 0: 
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases")) %>% 
+  row_spec(row = 0, italic = TRUE)
+```
+
+### Adding footnotes to column names
