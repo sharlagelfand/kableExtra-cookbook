@@ -1137,6 +1137,243 @@ Illinois
 </div>
 <div id="adding-footnotes-to-column-names" class="section level3">
 <h3><span class="header-section-number">3.2.3</span> Adding footnotes to column names</h3>
+<p>You can also add footnotes based on a column name. This gets just a touch more
+complex, because what you actually need to do is <em>rename</em> the column name to include
+the footnote marker in the column’s name.</p>
+<p>These markers can be added with
+functions that start with <code>footnote_marker</code>. For example, <code>footnote_marker_alphabet</code>
+gives letters for each footnote. The other options are <code>footnote_marker_number</code> and
+<code>footnote_marker_symbol</code>. You can add one of these to a column name directly in
+the <code>col.names</code> vector of column names by using <code>paste0</code> to add the marker on to the
+existing column name. You’ll put in <code>1</code> for the argument for the first footmark
+of a certain type, <code>2</code> for the second, and so on.</p>
+<p>Once you’ve added this footnote marker, you’ll need to also add the footnote itself.
+You do this with the <code>footnote</code> function. In this function, you can add a vector
+the same length as the number of footnotes of that type (alphabet, symbol, or number)
+with the footnote text in order.</p>
+<p>For a simple example, the following code will add a single footnote for a single
+column header, using a symbol to denote the footnote:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, </a>
+<a class="sourceLine" id="cb16-3" title="3">        <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, </a>
+<a class="sourceLine" id="cb16-4" title="4">                      <span class="kw">paste0</span>(<span class="st">&quot;Total Pertussis Cases&quot;</span>, <span class="kw">footnote_marker_symbol</span>(<span class="dv">1</span>))),</a>
+<a class="sourceLine" id="cb16-5" title="5">        <span class="dt">escape =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-6" title="6"><span class="st">  </span><span class="kw">footnote</span>(<span class="dt">symbol =</span> <span class="st">&quot;Includes all cases for 1928--2011&quot;</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+State
+</th>
+<th style="text-align:right;">
+Total Pertussis Cases<sup>*</sup>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border: 0;" colspan="100%">
+<sup>*</sup> Includes all cases for 1928–2011
+</td>
+</tr>
+</tfoot>
+</table>
+<p>Here is an example of adding footnotes to two column names, using alphabetical symbols:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, </a>
+<a class="sourceLine" id="cb17-3" title="3">        <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="kw">paste0</span>(<span class="st">&quot;State&quot;</span>, <span class="kw">footnote_marker_alphabet</span>(<span class="dv">1</span>)), </a>
+<a class="sourceLine" id="cb17-4" title="4">                      <span class="kw">paste0</span>(<span class="st">&quot;Total Pertussis Cases&quot;</span>, <span class="kw">footnote_marker_alphabet</span>(<span class="dv">2</span>))),</a>
+<a class="sourceLine" id="cb17-5" title="5">        <span class="dt">escape =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="st">  </span><span class="kw">footnote</span>(<span class="dt">alphabet =</span> <span class="kw">c</span>(<span class="st">&quot;Top 10 states in terms of total case counts.&quot;</span>,</a>
+<a class="sourceLine" id="cb17-7" title="7">                        <span class="st">&quot;Includes all cases for 1928--2011.&quot;</span>))</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+State<sup>a</sup>
+</th>
+<th style="text-align:right;">
+Total Pertussis Cases<sup>b</sup>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border: 0;" colspan="100%">
+<sup>a</sup> Top 10 states in terms of total case counts.
+</td>
+</tr>
+<tr>
+<td style="padding: 0; border: 0;" colspan="100%">
+<sup>b</sup> Includes all cases for 1928–2011.
+</td>
+</tr>
+</tfoot>
+</table>
 </div>
 </div>
 <div id="change-the-column-alignment" class="section level2">

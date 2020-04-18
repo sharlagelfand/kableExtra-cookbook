@@ -82,3 +82,44 @@ top_10_data %>%
 ```
 
 ### Adding footnotes to column names
+
+You can also add footnotes based on a column name. This gets just a touch more
+complex, because what you actually need to do is *rename* the column name to include
+the footnote marker in the column's name. 
+
+These markers can be added with 
+functions that start with `footnote_marker`. For example, `footnote_marker_alphabet`
+gives letters for each footnote. The other options are `footnote_marker_number` and
+`footnote_marker_symbol`. You can add one of these to a column name directly in 
+the `col.names` vector of column names by using `paste0` to add the marker on to the
+existing column name. You'll put in `1` for the argument for the first footmark
+of a certain type, `2` for the second, and so on. 
+
+Once you've added this footnote marker, you'll need to also add the footnote itself. 
+You do this with the `footnote` function. In this function, you can add a vector 
+the same length as the number of footnotes of that type (alphabet, symbol, or number)
+with the footnote text in order. 
+
+For a simple example, the following code will add a single footnote for a single 
+column header, using a symbol to denote the footnote:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, 
+        col.names = c("State", 
+                      paste0("Total Pertussis Cases", footnote_marker_symbol(1))),
+        escape = FALSE) %>% 
+  footnote(symbol = "Includes all cases for 1928--2011")
+```
+
+Here is an example of adding footnotes to two column names, using alphabetical symbols:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, 
+        col.names = c(paste0("State", footnote_marker_alphabet(1)), 
+                      paste0("Total Pertussis Cases", footnote_marker_alphabet(2))),
+        escape = FALSE) %>% 
+  footnote(alphabet = c("Top 10 states in terms of total case counts.",
+                        "Includes all cases for 1928--2011."))
+```
