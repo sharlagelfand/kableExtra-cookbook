@@ -205,14 +205,10 @@ uses a couple of basic examples of doing this, with code from the <code>dslabs</
 <p>Then, you can use the <code>kable</code> function to create a basic PDF table:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>) </a></code></pre></div>
-
-<p><img src="pdf_table_figures/ex_1.png" width="300" /></p>
 <p>The <code>booktabs = TRUE</code> option, if you include it in the <code>kable</code> function call, will give
 some cleaner default formatting for the table:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>, <span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
-
-<p><img src="pdf_table_figures/ex_2.png" width="299" /></p>
 
 </div>
 </div>
