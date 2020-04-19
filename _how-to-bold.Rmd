@@ -11,7 +11,8 @@ top_neighborhoods <- make_ames() %>%
   group_by(Neighborhood) %>%
   summarize(Home_Sales = n(),
             Total = scales::dollar(sum(Sale_Price))) %>%
-  slice_max(order_by = Home_Sales, n=8) 
+  arrange(-Home_Sales) %>%
+  slice(1:8)
 ```
 
 The column_spec() function allows the selection of a column and then a specification for the look. For example, this is a **bold** treatment for the third column.
