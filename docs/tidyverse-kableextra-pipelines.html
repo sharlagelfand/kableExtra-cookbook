@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Tidyverse / kableExtra pipelines | kableExtra Cookbook</title>
   <meta name="description" content="Chapter 4 Tidyverse / kableExtra pipelines | kableExtra Cookbook" />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Tidyverse / kableExtra pipelines | kableExtra Cookbook" />
   <meta property="og:type" content="book" />
@@ -70,7 +70,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -188,22 +188,22 @@ clean your data before piping that data into <code>kable</code> and <code>kableE
 create the table. This section will walk through some examples of this pipeline, and
 how it can provide a powerful approach for creating tables from data in R.</p>
 <p>To run this code, please be sure to load these packages:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="kw">library</span>(knitr)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">library</span>(knitr)</a></code></pre></div>
 <div id="example-data-1" class="section level2">
 <h2><span class="header-section-number">4.1</span> Example data</h2>
 <p>Again, this section uses a dataset from the <code>dslabs</code> package called “us_contagious_diseases”.
 You can load that data by loading the <code>dslabs</code> package (if you don’t have it, you
-can install it with <code>install.packages("dslabs")</code>) and then using the <code>data</code> function
+can install it with <code>install.packages(&quot;dslabs&quot;)</code>) and then using the <code>data</code> function
 to load the dataset:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">library</span>(dslabs)</a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">library</span>(dslabs)</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a></code></pre></div>
 <p>This dataset includes counts by states for various infectious diseases. It gives these
 counts by year over a several decades. It also gives the number of weeks for which that
 state reported data that year and the population of the state that year (in case you’d
 like to calculate rates):</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)</a></code></pre></div>
 <pre><code>##       disease   state year weeks_reporting count population
 ## 1 Hepatitis A Alabama 1966              50   321    3345787
 ## 2 Hepatitis A Alabama 1967              49   291    3364130
@@ -225,25 +225,25 @@ if we have a separate column for each disease (while “long” data is easier t
 when coding, “wide” data often is clearer in a presentation format). The
 <code>pivot_wider</code> can do that reshaping.</p>
 <p>Here’s the full pipeline:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-2" title="2"><span class="st">  </span><span class="co"># Get the year range for each combination of state and disease</span></a>
-<a class="sourceLine" id="cb25-3" title="3"><span class="st">  </span><span class="co"># by grouping by these variables and then using summarize</span></a>
-<a class="sourceLine" id="cb25-4" title="4"><span class="st">  </span><span class="kw">group_by</span>(state, disease) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-5" title="5"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">earliest_year =</span> <span class="kw">min</span>(year),</a>
-<a class="sourceLine" id="cb25-6" title="6">            <span class="dt">latest_year =</span> <span class="kw">max</span>(year)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-7" title="7"><span class="st">  </span><span class="co"># Use `mutate` to make a new column that presents this range more</span></a>
-<a class="sourceLine" id="cb25-8" title="8"><span class="st">  </span><span class="co"># nicely (the `unite` function could work here, too)</span></a>
-<a class="sourceLine" id="cb25-9" title="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">years =</span> <span class="kw">paste0</span>(earliest_year, <span class="st">&quot;--&quot;</span>, latest_year)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-10" title="10"><span class="st">  </span><span class="co"># Limit to just the data you want to present in the table</span></a>
-<a class="sourceLine" id="cb25-11" title="11"><span class="st">  </span><span class="kw">select</span>(state, disease, years) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-12" title="12"><span class="st">  </span><span class="co"># Reshape the data, so that each disease gets its own column</span></a>
-<a class="sourceLine" id="cb25-13" title="13"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;disease&quot;</span>, <span class="dt">values_from =</span> <span class="st">&quot;years&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-14" title="14"><span class="st">  </span><span class="co"># Send to `kable` for formatting as a table</span></a>
-<a class="sourceLine" id="cb25-15" title="15"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb25-16" title="16">                <span class="dt">caption =</span> <span class="st">&quot;Years of reporting for each state and disease.&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-17" title="17"><span class="st">  </span><span class="co"># Make the font size a bit smaller than the default, so the date ranges</span></a>
-<a class="sourceLine" id="cb25-18" title="18"><span class="st">  </span><span class="co"># will be shown on one line each</span></a>
-<a class="sourceLine" id="cb25-19" title="19"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">font_size =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="st">  </span><span class="co"># Get the year range for each combination of state and disease</span></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="st">  </span><span class="co"># by grouping by these variables and then using summarize</span></a>
+<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(state, disease) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">earliest_year =</span> <span class="kw">min</span>(year),</a>
+<a class="sourceLine" id="cb25-6" data-line-number="6">            <span class="dt">latest_year =</span> <span class="kw">max</span>(year)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="st">  </span><span class="co"># Use `mutate` to make a new column that presents this range more</span></a>
+<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="st">  </span><span class="co"># nicely (the `unite` function could work here, too)</span></a>
+<a class="sourceLine" id="cb25-9" data-line-number="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">years =</span> <span class="kw">paste0</span>(earliest_year, <span class="st">&quot;--&quot;</span>, latest_year)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-10" data-line-number="10"><span class="st">  </span><span class="co"># Limit to just the data you want to present in the table</span></a>
+<a class="sourceLine" id="cb25-11" data-line-number="11"><span class="st">  </span><span class="kw">select</span>(state, disease, years) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-12" data-line-number="12"><span class="st">  </span><span class="co"># Reshape the data, so that each disease gets its own column</span></a>
+<a class="sourceLine" id="cb25-13" data-line-number="13"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;disease&quot;</span>, <span class="dt">values_from =</span> <span class="st">&quot;years&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-14" data-line-number="14"><span class="st">  </span><span class="co"># Send to `kable` for formatting as a table</span></a>
+<a class="sourceLine" id="cb25-15" data-line-number="15"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb25-16" data-line-number="16">                <span class="dt">caption =</span> <span class="st">&quot;Years of reporting for each state and disease.&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-17" data-line-number="17"><span class="st">  </span><span class="co"># Make the font size a bit smaller than the default, so the date ranges</span></a>
+<a class="sourceLine" id="cb25-18" data-line-number="18"><span class="st">  </span><span class="co"># will be shown on one line each</span></a>
+<a class="sourceLine" id="cb25-19" data-line-number="19"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">font_size =</span> <span class="dv">10</span>)</a></code></pre></div>
 <table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:unnamed-chunk-8">Table 4.1: </span>Years of reporting for each state and disease.
@@ -1613,27 +1613,28 @@ the number of cases of a specific disease as it’s changed over the last five y
 of reporting in a certain region. For example, you could pull data on states along
 the west coast of the US (California, Oregon, and Washington) and look at changes in
 pertussis over the last five available years.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span><span class="co"># Limit to states in the region of interest</span></a>
-<a class="sourceLine" id="cb26-3" title="3"><span class="st">  </span><span class="kw">filter</span>(state <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;California&quot;</span>, <span class="st">&quot;Oregon&quot;</span>, <span class="st">&quot;Washington&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-4" title="4"><span class="st">  </span><span class="co"># Limit to the disease of interest</span></a>
-<a class="sourceLine" id="cb26-5" title="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-6" title="6"><span class="st">  </span><span class="co"># Limit to the latest five years reported for each state</span></a>
-<a class="sourceLine" id="cb26-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-8" title="8"><span class="st">  </span><span class="kw">slice_max</span>(<span class="dt">order_by =</span> year, <span class="dt">n =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-9" title="9"><span class="st">  </span><span class="co"># Calculate the average weekly count from the total yearly count and</span></a>
-<a class="sourceLine" id="cb26-10" title="10"><span class="st">  </span><span class="co"># the number of weeks reporting (should check data---does an </span></a>
-<a class="sourceLine" id="cb26-11" title="11"><span class="st">  </span><span class="co"># &#39;unreported&#39; week mean there were no cases that week?)</span></a>
-<a class="sourceLine" id="cb26-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ave_weekly_count =</span> count <span class="op">/</span><span class="st"> </span>weeks_reporting) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-13" title="13"><span class="st">  </span><span class="co"># Limit to only the data to show in the table</span></a>
-<a class="sourceLine" id="cb26-14" title="14"><span class="st">  </span><span class="kw">select</span>(state, year, ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-15" title="15"><span class="st">  </span><span class="co"># Reorder by year so that the earliest year comes first</span></a>
-<a class="sourceLine" id="cb26-16" title="16"><span class="st">  </span><span class="kw">arrange</span>(year) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-17" title="17"><span class="st">  </span><span class="co"># &quot;Widen&quot; the data for a nicer table</span></a>
-<a class="sourceLine" id="cb26-18" title="18"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> year, <span class="dt">values_from =</span> ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-19" title="19"><span class="st">  </span><span class="co"># Only report one digit (i.e., after the decimal place) for each number</span></a>
-<a class="sourceLine" id="cb26-20" title="20"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb26-21" title="21">        <span class="dt">caption =</span> <span class="st">&quot;Average weekly number of cases of pertussis in west coast states for the last five years of reporting.&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="st">  </span><span class="co"># Limit to states in the region of interest</span></a>
+<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(state <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;California&quot;</span>, <span class="st">&quot;Oregon&quot;</span>, <span class="st">&quot;Washington&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="st">  </span><span class="co"># Limit to the disease of interest</span></a>
+<a class="sourceLine" id="cb26-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-6" data-line-number="6"><span class="st">  </span><span class="co"># Limit to the latest five years reported for each state</span></a>
+<a class="sourceLine" id="cb26-7" data-line-number="7"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-8" data-line-number="8"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(year)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-9" data-line-number="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-10" data-line-number="10"><span class="st">  </span><span class="co"># Calculate the average weekly count from the total yearly count and</span></a>
+<a class="sourceLine" id="cb26-11" data-line-number="11"><span class="st">  </span><span class="co"># the number of weeks reporting (should check data---does an </span></a>
+<a class="sourceLine" id="cb26-12" data-line-number="12"><span class="st">  </span><span class="co"># &#39;unreported&#39; week mean there were no cases that week?)</span></a>
+<a class="sourceLine" id="cb26-13" data-line-number="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ave_weekly_count =</span> count <span class="op">/</span><span class="st"> </span>weeks_reporting) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-14" data-line-number="14"><span class="st">  </span><span class="co"># Limit to only the data to show in the table</span></a>
+<a class="sourceLine" id="cb26-15" data-line-number="15"><span class="st">  </span><span class="kw">select</span>(state, year, ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-16" data-line-number="16"><span class="st">  </span><span class="co"># Reorder by year so that the earliest year comes first</span></a>
+<a class="sourceLine" id="cb26-17" data-line-number="17"><span class="st">  </span><span class="kw">arrange</span>(year) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-18" data-line-number="18"><span class="st">  </span><span class="co"># &quot;Widen&quot; the data for a nicer table</span></a>
+<a class="sourceLine" id="cb26-19" data-line-number="19"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> year, <span class="dt">values_from =</span> ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-20" data-line-number="20"><span class="st">  </span><span class="co"># Only report one digit (i.e., after the decimal place) for each number</span></a>
+<a class="sourceLine" id="cb26-21" data-line-number="21"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb26-22" data-line-number="22">        <span class="dt">caption =</span> <span class="st">&quot;Average weekly number of cases of pertussis in west coast states for the last five years of reporting.&quot;</span>)</a></code></pre></div>
 <table>
 <caption>
 <span id="tab:unnamed-chunk-9">Table 4.2: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.

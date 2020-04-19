@@ -91,7 +91,8 @@ us_contagious_diseases %>%
   filter(disease == "Pertussis") %>% 
   # Limit to the latest five years reported for each state
   group_by(state) %>% 
-  slice_max(order_by = year, n = 5) %>% 
+  arrange(desc(year)) %>%
+  slice(1:5) %>%
   # Calculate the average weekly count from the total yearly count and
   # the number of weeks reporting (should check data---does an 
   # 'unreported' week mean there were no cases that week?)
