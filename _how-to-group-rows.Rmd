@@ -66,3 +66,31 @@ per_hepa_latest_years %>%
   pack_rows("Pertussis", start_row = 4, end_row = 6)
 ```
 
+This method of grouping the rows required us to list, by hand, the rows in each
+group. However, that's something that we originally had in the data, in the 
+`disease` column. 
+
+The `kableExtra` has a function called `collapse_rows` that will do the grouping
+by a column in the data. You need to move the columns to use to early in the
+dataframe, which you can do with `select`. Then, you can specify to collapse
+the rows by the first column using `collapse_rows`:
+
+```{r}
+per_hepa_latest_years %>% 
+  # Move disease to be the first column.
+  select(disease, state, `2007`:`2011`) %>% 
+  kable(digits = 1) %>% 
+  collapse_rows(columns = 1)
+```
+
+The `collapse_rows` function includes some different formatting options. For example, 
+you can change the vertical alignment of the headings for the row groups with `valign`.
+Here's the code to put them at the top of each row group, instead of vertically centered:
+
+```{r}
+per_hepa_latest_years %>% 
+  # Move disease to be the first column.
+  select(disease, state, `2007`:`2011`) %>% 
+  kable(digits = 1) %>% 
+  collapse_rows(columns = 1, valign = "top")
+```
