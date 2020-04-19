@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Tidyverse / kableExtra pipelines | kableExtra Cookbook</title>
+  <meta name="description" content="Chapter 4 Tidyverse / kableExtra pipelines | kableExtra Cookbook" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Tidyverse / kableExtra pipelines | kableExtra Cookbook" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Tidyverse / kableExtra pipelines | kableExtra Cookbook" />
+  
+  
+  
+
+<meta name="author" content="Sharla Gelfand" />
+
+
+<meta name="date" content="2020-04-19" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="the-basics.html"/>
+<link rel="next" href="how-to.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">kableExtra Cookbook</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="the-basics.html"><a href="the-basics.html"><i class="fa fa-check"></i><b>3</b> The basics</a><ul>
+<li class="chapter" data-level="3.1" data-path="the-basics.html"><a href="the-basics.html#create-a-basic-table"><i class="fa fa-check"></i><b>3.1</b> Create a basic table</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="the-basics.html"><a href="the-basics.html#example-data"><i class="fa fa-check"></i><b>3.1.1</b> Example data</a></li>
+<li class="chapter" data-level="3.1.2" data-path="the-basics.html"><a href="the-basics.html#creating-a-basic-table"><i class="fa fa-check"></i><b>3.1.2</b> Creating a basic table</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="the-basics.html"><a href="the-basics.html#change-column-names"><i class="fa fa-check"></i><b>3.2</b> Change column names</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="the-basics.html"><a href="the-basics.html#basics-of-changing-column-names"><i class="fa fa-check"></i><b>3.2.1</b> Basics of changing column names</a></li>
+<li class="chapter" data-level="3.2.2" data-path="the-basics.html"><a href="the-basics.html#changing-formatting-in-column-names"><i class="fa fa-check"></i><b>3.2.2</b> Changing formatting in column names</a></li>
+<li class="chapter" data-level="3.2.3" data-path="the-basics.html"><a href="the-basics.html#adding-footnotes-to-column-names"><i class="fa fa-check"></i><b>3.2.3</b> Adding footnotes to column names</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="the-basics.html"><a href="the-basics.html#change-the-column-alignment"><i class="fa fa-check"></i><b>3.3</b> Change the column alignment</a></li>
+<li class="chapter" data-level="3.4" data-path="the-basics.html"><a href="the-basics.html#add-a-table-caption"><i class="fa fa-check"></i><b>3.4</b> Add a table caption</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="tidyverse-kableextra-pipelines.html"><a href="tidyverse-kableextra-pipelines.html"><i class="fa fa-check"></i><b>4</b> Tidyverse / kableExtra pipelines</a><ul>
+<li class="chapter" data-level="4.1" data-path="tidyverse-kableextra-pipelines.html"><a href="tidyverse-kableextra-pipelines.html#example-data-1"><i class="fa fa-check"></i><b>4.1</b> Example data</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="how-to.html"><a href="how-to.html"><i class="fa fa-check"></i><b>5</b> How to…</a><ul>
+<li class="chapter" data-level="5.1" data-path="how-to.html"><a href="how-to.html#make-a-table-full-width"><i class="fa fa-check"></i><b>5.1</b> Make a table full width</a></li>
+<li class="chapter" data-level="5.2" data-path="how-to.html"><a href="how-to.html#add-a-top-header"><i class="fa fa-check"></i><b>5.2</b> Add a top header</a></li>
+<li class="chapter" data-level="5.3" data-path="how-to.html"><a href="how-to.html#bold-columns-or-rows"><i class="fa fa-check"></i><b>5.3</b> Bold columns or rows</a></li>
+<li class="chapter" data-level="5.4" data-path="how-to.html"><a href="how-to.html#dynamically-make-changes"><i class="fa fa-check"></i><b>5.4</b> Dynamically make changes</a></li>
+<li class="chapter" data-level="5.5" data-path="how-to.html"><a href="how-to.html#take-advantage-of-pdf-only-features"><i class="fa fa-check"></i><b>5.5</b> Take advantage of PDF-only features</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="wild-caught-tables.html"><a href="wild-caught-tables.html"><i class="fa fa-check"></i><b>6</b> Wild-caught Tables</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">kableExtra Cookbook</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="tidyverse-kableextra-pipelines" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Tidyverse / kableExtra pipelines</h1>
+<p>To really levarage the power of R for tables, you’ll likely want to get in the habit of
+creating pipelines that use functions from the <code>tidyverse</code> package to reshape or
+clean your data before piping that data into <code>kable</code> and <code>kableExtra</code> functions to
+create the table. This section will walk through some examples of this pipeline, and
+how it can provide a powerful approach for creating tables from data in R.</p>
+<div id="example-data-1" class="section level2">
+<h2><span class="header-section-number">4.1</span> Example data</h2>
+<p>Again, this section uses a dataset from the <code>dslabs</code> package called “us_contagious_diseases”.
+You can load that data by loading the <code>dslabs</code> package (if you don’t have it, you
+can install it with <code>install.packages("dslabs")</code>) and then using the <code>data</code> function
+to load the dataset:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">library</span>(dslabs)</a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a></code></pre></div>
+<p>This dataset includes counts by states for various infectious diseases. It gives these
+counts by year over a several decades. It also gives the number of weeks for which that
+state reported data that year and the population of the state that year (in case you’d
+like to calculate rates):</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)</a></code></pre></div>
+<pre><code>##       disease   state year weeks_reporting count population
+## 1 Hepatitis A Alabama 1966              50   321    3345787
+## 2 Hepatitis A Alabama 1967              49   291    3364130
+## 3 Hepatitis A Alabama 1968              52   314    3386068
+## 4 Hepatitis A Alabama 1969              49   380    3412450</code></pre>
+<p>One quick table we might want to create may be a table where each state is listed,
+with the range of years that the state reported data. This way, we can quickly see
+the years that each state reported cases for each disease, and if all
+states have data for the same number of years.</p>
+<p>To do this, we’ll need to get a <em>summary</em> from each combination of state and disease,
+where we get the minimum and maximum values of <code>year</code> for that combination. Then, we
+can paste those values together to get the year range. We can <code>select</code> just the
+columns we need for the final table, getting rid of any extra columns we created
+along the way to help with our calculation. Finally, this table will look much nicer
+if we have a separate column for each disease (while “long” data is easier to work with
+when coding, “wide” data often is clearer in a presentation format). The
+<code>pivot_wider</code> can do that reshaping.</p>
+<p>Here’s the full pipeline:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-2" title="2"><span class="st">  </span><span class="co"># Get the year range for each combination of state and disease</span></a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="st">  </span><span class="co"># by grouping by these variables and then using summarize</span></a>
+<a class="sourceLine" id="cb24-4" title="4"><span class="st">  </span><span class="kw">group_by</span>(state, disease) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-5" title="5"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">earliest_year =</span> <span class="kw">min</span>(year),</a>
+<a class="sourceLine" id="cb24-6" title="6">            <span class="dt">latest_year =</span> <span class="kw">max</span>(year)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-7" title="7"><span class="st">  </span><span class="co"># Use `mutate` to make a new column that presents this range more</span></a>
+<a class="sourceLine" id="cb24-8" title="8"><span class="st">  </span><span class="co"># nicely (the `unite` function could work here, too)</span></a>
+<a class="sourceLine" id="cb24-9" title="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">years =</span> <span class="kw">paste0</span>(earliest_year, <span class="st">&quot;--&quot;</span>, latest_year)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-10" title="10"><span class="st">  </span><span class="co"># Limit to just the data you want to present in the table</span></a>
+<a class="sourceLine" id="cb24-11" title="11"><span class="st">  </span><span class="kw">select</span>(state, disease, years) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-12" title="12"><span class="st">  </span><span class="co"># Reshape the data, so that each disease gets its own column</span></a>
+<a class="sourceLine" id="cb24-13" title="13"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;disease&quot;</span>, <span class="dt">values_from =</span> <span class="st">&quot;years&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-14" title="14"><span class="st">  </span><span class="co"># Send to `kable` for formatting as a table</span></a>
+<a class="sourceLine" id="cb24-15" title="15"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-16" title="16"><span class="st">  </span><span class="co"># Make the font size a bit smaller than the default, so the date ranges</span></a>
+<a class="sourceLine" id="cb24-17" title="17"><span class="st">  </span><span class="co"># will be shown on one line each</span></a>
+<a class="sourceLine" id="cb24-18" title="18"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">font_size =</span> <span class="dv">10</span>)</a></code></pre></div>
+<table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+state
+</th>
+<th style="text-align:left;">
+Hepatitis A
+</th>
+<th style="text-align:left;">
+Measles
+</th>
+<th style="text-align:left;">
+Mumps
+</th>
+<th style="text-align:left;">
+Pertussis
+</th>
+<th style="text-align:left;">
+Polio
+</th>
+<th style="text-align:left;">
+Rubella
+</th>
+<th style="text-align:left;">
+Smallpox
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Alabama
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arizona
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arkansas
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Colorado
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Connecticut
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Delaware
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+District Of Columbia
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Florida
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hawaii
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Idaho
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Indiana
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Iowa
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kansas
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kentucky
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Louisiana
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maine
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maryland
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Minnesota
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mississippi
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Missouri
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nebraska
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nevada
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Mexico
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+North Carolina
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+North Dakota
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oklahoma
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oregon
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+South Carolina
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+South Dakota
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tennessee
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Utah
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vermont
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Virginia
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Washington
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+West Virginia
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wyoming
+</td>
+<td style="text-align:left;">
+1966–2011
+</td>
+<td style="text-align:left;">
+1928–2002
+</td>
+<td style="text-align:left;">
+1968–2002
+</td>
+<td style="text-align:left;">
+1938–2011
+</td>
+<td style="text-align:left;">
+1928–1968
+</td>
+<td style="text-align:left;">
+1966–2002
+</td>
+<td style="text-align:left;">
+1928–1952
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="the-basics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="how-to.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["kableExtra-cookbook.pdf", "kableExtra-cookbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

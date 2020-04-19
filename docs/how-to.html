@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 How to… | kableExtra Cookbook</title>
-  <meta name="description" content="Chapter 4 How to… | kableExtra Cookbook" />
+  <title>Chapter 5 How to… | kableExtra Cookbook</title>
+  <meta name="description" content="Chapter 5 How to… | kableExtra Cookbook" />
   <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 How to… | kableExtra Cookbook" />
+  <meta property="og:title" content="Chapter 5 How to… | kableExtra Cookbook" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 How to… | kableExtra Cookbook" />
+  <meta name="twitter:title" content="Chapter 5 How to… | kableExtra Cookbook" />
   
   
   
@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="the-basics.html"/>
+<link rel="prev" href="tidyverse-kableextra-pipelines.html"/>
 <link rel="next" href="wild-caught-tables.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -147,14 +147,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="the-basics.html"><a href="the-basics.html#change-the-column-alignment"><i class="fa fa-check"></i><b>3.3</b> Change the column alignment</a></li>
 <li class="chapter" data-level="3.4" data-path="the-basics.html"><a href="the-basics.html#add-a-table-caption"><i class="fa fa-check"></i><b>3.4</b> Add a table caption</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="how-to.html"><a href="how-to.html"><i class="fa fa-check"></i><b>4</b> How to…</a><ul>
-<li class="chapter" data-level="4.1" data-path="how-to.html"><a href="how-to.html#make-a-table-full-width"><i class="fa fa-check"></i><b>4.1</b> Make a table full width</a></li>
-<li class="chapter" data-level="4.2" data-path="how-to.html"><a href="how-to.html#add-a-top-header"><i class="fa fa-check"></i><b>4.2</b> Add a top header</a></li>
-<li class="chapter" data-level="4.3" data-path="how-to.html"><a href="how-to.html#bold-columns-or-rows"><i class="fa fa-check"></i><b>4.3</b> Bold columns or rows</a></li>
-<li class="chapter" data-level="4.4" data-path="how-to.html"><a href="how-to.html#dynamically-make-changes"><i class="fa fa-check"></i><b>4.4</b> Dynamically make changes</a></li>
-<li class="chapter" data-level="4.5" data-path="how-to.html"><a href="how-to.html#take-advantage-of-pdf-only-features"><i class="fa fa-check"></i><b>4.5</b> Take advantage of PDF-only features</a></li>
+<li class="chapter" data-level="4" data-path="tidyverse-kableextra-pipelines.html"><a href="tidyverse-kableextra-pipelines.html"><i class="fa fa-check"></i><b>4</b> Tidyverse / kableExtra pipelines</a><ul>
+<li class="chapter" data-level="4.1" data-path="tidyverse-kableextra-pipelines.html"><a href="tidyverse-kableextra-pipelines.html#example-data-1"><i class="fa fa-check"></i><b>4.1</b> Example data</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="wild-caught-tables.html"><a href="wild-caught-tables.html"><i class="fa fa-check"></i><b>5</b> Wild-caught Tables</a></li>
+<li class="chapter" data-level="5" data-path="how-to.html"><a href="how-to.html"><i class="fa fa-check"></i><b>5</b> How to…</a><ul>
+<li class="chapter" data-level="5.1" data-path="how-to.html"><a href="how-to.html#make-a-table-full-width"><i class="fa fa-check"></i><b>5.1</b> Make a table full width</a></li>
+<li class="chapter" data-level="5.2" data-path="how-to.html"><a href="how-to.html#add-a-top-header"><i class="fa fa-check"></i><b>5.2</b> Add a top header</a></li>
+<li class="chapter" data-level="5.3" data-path="how-to.html"><a href="how-to.html#bold-columns-or-rows"><i class="fa fa-check"></i><b>5.3</b> Bold columns or rows</a></li>
+<li class="chapter" data-level="5.4" data-path="how-to.html"><a href="how-to.html#dynamically-make-changes"><i class="fa fa-check"></i><b>5.4</b> Dynamically make changes</a></li>
+<li class="chapter" data-level="5.5" data-path="how-to.html"><a href="how-to.html#take-advantage-of-pdf-only-features"><i class="fa fa-check"></i><b>5.5</b> Take advantage of PDF-only features</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="wild-caught-tables.html"><a href="wild-caught-tables.html"><i class="fa fa-check"></i><b>6</b> Wild-caught Tables</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -176,39 +179,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="how-to" class="section level1">
-<h1><span class="header-section-number">Chapter 4</span> How to…</h1>
+<h1><span class="header-section-number">Chapter 5</span> How to…</h1>
 <div id="make-a-table-full-width" class="section level2">
-<h2><span class="header-section-number">4.1</span> Make a table full width</h2>
+<h2><span class="header-section-number">5.1</span> Make a table full width</h2>
 </div>
 <div id="add-a-top-header" class="section level2">
-<h2><span class="header-section-number">4.2</span> Add a top header</h2>
+<h2><span class="header-section-number">5.2</span> Add a top header</h2>
 </div>
 <div id="bold-columns-or-rows" class="section level2">
-<h2><span class="header-section-number">4.3</span> Bold columns or rows</h2>
+<h2><span class="header-section-number">5.3</span> Bold columns or rows</h2>
 </div>
 <div id="dynamically-make-changes" class="section level2">
-<h2><span class="header-section-number">4.4</span> Dynamically make changes</h2>
+<h2><span class="header-section-number">5.4</span> Dynamically make changes</h2>
 </div>
 <div id="take-advantage-of-pdf-only-features" class="section level2">
-<h2><span class="header-section-number">4.5</span> Take advantage of PDF-only features</h2>
+<h2><span class="header-section-number">5.5</span> Take advantage of PDF-only features</h2>
 <p>Example code that will allow us to embed PDF-only table output. This
 uses a couple of basic examples of doing this, with code from the <code>dslabs</code> package.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="kw">library</span>(dslabs)</a>
-<a class="sourceLine" id="cb21-3" title="3"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a>
-<a class="sourceLine" id="cb21-4" title="4">top_<span class="dv">10</span>_data &lt;-<span class="st"> </span>us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-5" title="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total_count =</span> <span class="kw">sum</span>(count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-8" title="8"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total_count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-9" title="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="kw">library</span>(dslabs)</a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a>
+<a class="sourceLine" id="cb25-4" title="4">top_<span class="dv">10</span>_data &lt;-<span class="st"> </span>us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-5" title="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total_count =</span> <span class="kw">sum</span>(count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-8" title="8"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total_count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-9" title="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) </a></code></pre></div>
 <p>Then, you can use the <code>kable</code> function to create a basic PDF table:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>) </a></code></pre></div>
 <p>The <code>booktabs = TRUE</code> option, if you include it in the <code>kable</code> function call, will give
 some cleaner default formatting for the table:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>, <span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>, <span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
 
 </div>
 </div>
@@ -217,7 +220,7 @@ some cleaner default formatting for the table:</p>
           </div>
         </div>
       </div>
-<a href="the-basics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="tidyverse-kableextra-pipelines.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="wild-caught-tables.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

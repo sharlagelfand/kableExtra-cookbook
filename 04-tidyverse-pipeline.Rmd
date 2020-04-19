@@ -1,0 +1,68 @@
+# Tidyverse / kableExtra pipelines
+
+To really levarage the power of R for tables, you'll likely want to get in the habit of
+creating pipelines that use functions from the `tidyverse` package to reshape or 
+clean your data before piping that data into `kable` and `kableExtra` functions to 
+create the table. This section will walk through some examples of this pipeline, and 
+how it can provide a powerful approach for creating tables from data in R. 
+
+## Example data
+
+Again, this section uses a dataset from the `dslabs` package called "us_contagious_diseases".
+You can load that data by loading the `dslabs` package (if you don't have it, you 
+can install it with `install.packages("dslabs")`) and then using the `data` function
+to load the dataset:
+
+```{r}
+library(dslabs)
+data("us_contagious_diseases")
+```
+
+This dataset includes counts by states for various infectious diseases. It gives these 
+counts by year over a several decades. It also gives the number of weeks for which that
+state reported data that year and the population of the state that year (in case you'd
+like to calculate rates):
+
+```{r}
+us_contagious_diseases %>% 
+  slice(1:4)
+```
+
+One quick table we might want to create may be a table where each state is listed, 
+with the range of years that the state reported data. This way, we can quickly see 
+the years that each state reported cases for each disease, and if all 
+states have data for the same number of years. 
+
+To do this, we'll need to get a *summary* from each combination of state and disease, 
+where we get the minimum and maximum values of `year` for that combination. Then, we
+can paste those values together to get the year range. We can `select` just the
+columns we need for the final table, getting rid of any extra columns we created
+along the way to help with our calculation. Finally, this table will look much nicer
+if we have a separate column for each disease (while "long" data is easier to work with
+when coding, "wide" data often is clearer in a presentation format). The
+`pivot_wider` can do that reshaping. 
+
+Here's the full pipeline:
+
+```{r}
+us_contagious_diseases %>% 
+  # Get the year range for each combination of state and disease
+  # by grouping by these variables and then using summarize
+  group_by(state, disease) %>% 
+  summarize(earliest_year = min(year),
+            latest_year = max(year)) %>% 
+  # Use `mutate` to make a new column that presents this range more
+  # nicely (the `unite` function could work here, too)
+  mutate(years = paste0(earliest_year, "--", latest_year)) %>% 
+  # Limit to just the data you want to present in the table
+  select(state, disease, years) %>% 
+  # Reshape the data, so that each disease gets its own column
+  pivot_wider(names_from = "disease", values_from = "years") %>% 
+  # Send to `kable` for formatting as a table
+  kable(booktabs = TRUE) %>% 
+  # Make the font size a bit smaller than the default, so the date ranges
+  # will be shown on one line each
+  kable_styling(font_size = 10)
+```
+
+
