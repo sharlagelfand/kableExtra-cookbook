@@ -85,6 +85,19 @@ pertussis_latest_years %>%
 Again, you can see that 1 + 2 + 3 = 6, so we've covered all of our columns in the 
 table. 
 
+If you want, you can even add headers on top of headers. Just keep adding calls to 
+`add_header_above`, going from the header you want closest to the column names to the
+top-most one you want. For example, you could add a header above both of the two 
+top-level headers in the previous example with:
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "First two years" = 2, "Next three years" = 3)) %>% 
+  add_header_above(header = c(" " = 1, "Year" = 5))
+```
+
 You can change the formatting of the header in the `add_header_above` call, as well. 
 For example, you can change it to be in italics with `italic = TRUE`:
 
