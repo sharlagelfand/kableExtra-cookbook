@@ -1,1 +1,34 @@
 ## Bold columns or rows
+
+When tables have a lot of content, you may want to highlight elements to draw attention to them. This example uses data from the `AmesHousing` package.
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(AmesHousing)
+
+top_neighborhoods <- make_ames() %>%
+  filter(Year_Sold == 2010) %>%
+  group_by(Neighborhood) %>%
+  summarize(Home_Sales = n(),
+            Total = scales::dollar(sum(Sale_Price))) %>%
+  slice_max(order_by = Home_Sales, n=8) 
+```
+
+The column_spec() function allows the selection of a column and then a specification for the look. For example, this is a **bold** treatment for the third column.
+
+```{r}
+top_neighborhoods %>%
+  kable() %>%
+  kable_styling() %>%
+  column_spec(3, bold = T) 
+```
+
+The row_spec() function allows the selection of rows and a specification for a style. 
+For greater emphasis, this example sets a background fill color and the font color. 
+
+```{r}
+top_neighborhoods %>%
+  kable() %>%
+  kable_styling() %>%
+  row_spec(3:4, bold = T, color = "white", background = "#D7261E")
+```
