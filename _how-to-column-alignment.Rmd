@@ -1,1 +1,34 @@
 ## Change the column alignment
+
+You might want to change how the values in each column are aligned. By default, 
+the numeric columns will be right-aligned and all others will be left-aligned, 
+but you might want something different, like everything to be centered. 
+
+You can use the `align` parameter in the `kable` function to change the column alignment. 
+This parameter takes a character vector that combines the letters "c", "l", and "r". 
+These stand for center aligned ("c"), left-aligned ("l"), and right-aligned ("r"). 
+
+If you'd like all of your columns to be aligned in the same way (for example, all 
+center-aligned), you can just put one character into the argument for `align`. 
+For example, the following code will center-aligned both of the two columns in the
+example table:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases"),
+        align = "c") 
+```
+
+If you want to set different alignments for different columns, you will need to include
+as many characters in the argument to the `align` parameter as there are columns in the
+dataframe. You will line up the characters with the columns---for example, if you want
+the first column to be right-aligned and the next to be center-aligned, you could 
+do that with the argument `"rc"`, where "r" is in the first position to stand for the
+first column and "c" is in the second position to stand for the second column:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases"),
+        align = "rc")
+```
+
