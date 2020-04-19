@@ -9,4 +9,5 @@
 ```{r, child = "_how-to-column-alignment.Rmd"}
 ```
 
-## Add a caption
+```{r, child = "_how-to-caption.Rmd"}
+```

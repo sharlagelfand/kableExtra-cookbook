@@ -145,7 +145,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2.3" data-path="the-basics.html"><a href="the-basics.html#adding-footnotes-to-column-names"><i class="fa fa-check"></i><b>3.2.3</b> Adding footnotes to column names</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="the-basics.html"><a href="the-basics.html#change-the-column-alignment"><i class="fa fa-check"></i><b>3.3</b> Change the column alignment</a></li>
-<li class="chapter" data-level="3.4" data-path="the-basics.html"><a href="the-basics.html#add-a-caption"><i class="fa fa-check"></i><b>3.4</b> Add a caption</a></li>
+<li class="chapter" data-level="3.4" data-path="the-basics.html"><a href="the-basics.html#add-a-table-caption"><i class="fa fa-check"></i><b>3.4</b> Add a table caption</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="how-to.html"><a href="how-to.html"><i class="fa fa-check"></i><b>4</b> How to…</a><ul>
 <li class="chapter" data-level="4.1" data-path="how-to.html"><a href="how-to.html#make-a-table-full-width"><i class="fa fa-check"></i><b>4.1</b> Make a table full width</a></li>
@@ -1590,8 +1590,114 @@ Illinois
 </tbody>
 </table>
 </div>
-<div id="add-a-caption" class="section level2">
-<h2><span class="header-section-number">3.4</span> Add a caption</h2>
+<div id="add-a-table-caption" class="section level2">
+<h2><span class="header-section-number">3.4</span> Add a table caption</h2>
+<p>You can add a caption to your table with the <code>caption</code> parameter. This lets you
+put your caption in a character string, and it will be added to the table output:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;State&quot;</span>, <span class="st">&quot;Total Pertussis Cases&quot;</span>),</a>
+<a class="sourceLine" id="cb20-3" title="3">        <span class="dt">caption =</span> <span class="st">&quot;States with most total cases of Pertussis&quot;</span>) </a></code></pre></div>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-26">Table 3.1: </span>States with most total cases of Pertussis
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+State
+</th>
+<th style="text-align:right;">
+Total Pertussis Cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:right;">
+214266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Texas
+</td>
+<td style="text-align:right;">
+191626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+160331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+155110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:right;">
+136302
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:right;">
+124964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+116211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Jersey
+</td>
+<td style="text-align:right;">
+109192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Massachusetts
+</td>
+<td style="text-align:right;">
+105285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illinois
+</td>
+<td style="text-align:right;">
+103115
+</td>
+</tr>
+</tbody>
+</table>
+<p>The captions will be numbered based on their order in the document. If you’re
+building a fancier document (like the <code>bookdown</code> book we’ve created here), the
+table numbering will start with the chapter’s number and then given the number of the
+table within that chapter.</p>
 
 </div>
 </div>

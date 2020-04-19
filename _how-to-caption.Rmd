@@ -1,0 +1,15 @@
+## Add a table caption
+
+You can add a caption to your table with the `caption` parameter. This lets you 
+put your caption in a character string, and it will be added to the table output:
+
+```{r}
+top_10_data %>% 
+  kable(booktabs = TRUE, col.names = c("State", "Total Pertussis Cases"),
+        caption = "States with most total cases of Pertussis") 
+```
+
+The captions will be numbered based on their order in the document. If you're 
+building a fancier document (like the `bookdown` book we've created here), the 
+table numbering will start with the chapter's number and then given the number of the 
+table within that chapter. 
