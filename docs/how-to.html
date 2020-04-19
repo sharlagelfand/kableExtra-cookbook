@@ -191,27 +191,698 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="dynamically-make-changes" class="section level2">
 <h2><span class="header-section-number">5.4</span> Dynamically make changes</h2>
+<p>You might want to make changes to your tables that depend on features of your data that aren’t known in advance or can’t be hardcoded.</p>
+<p>Let’s look at the <code>comma_survey</code> data set, which polled Americans on the oxford comma and other grammatical concepts. In particular, we’ll look at the education of those who care about the debate of whether “data” is a singular or plural noun:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">library</span>(fivethirtyeight)</a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb25-3" title="3"></a>
+<a class="sourceLine" id="cb25-4" title="4">data_noun &lt;-<span class="st"> </span>comma_survey <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-5" title="5"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(care_data)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-6" title="6"><span class="st">  </span><span class="kw">select</span>(education, care_data)</a>
+<a class="sourceLine" id="cb25-7" title="7"></a>
+<a class="sourceLine" id="cb25-8" title="8">data_noun</a></code></pre></div>
+<pre><code>## # A tibble: 1,091 x 2
+##    education                        care_data 
+##    &lt;ord&gt;                            &lt;ord&gt;     
+##  1 Bachelor degree                  Not much  
+##  2 Graduate degree                  Not much  
+##  3 &lt;NA&gt;                             Not at all
+##  4 Less than high school degree     Some      
+##  5 &lt;NA&gt;                             Not much  
+##  6 Some college or Associate degree Some      
+##  7 Some college or Associate degree Some      
+##  8 Some college or Associate degree A lot     
+##  9 Graduate degree                  Not much  
+## 10 Bachelor degree                  Some      
+## # … with 1,081 more rows</code></pre>
+<p>We want to make a table of what percent, by education, answered each of “Not much”, “Not at all”, “Some”, and “A lot” to the question: “How much, if at all, do you care about the debate over the use of the word”data" as a singular or plural noun?".</p>
+<p>First, we need to do some wrangling to replace <code>NA</code> values of <code>Education</code> with “Education unknown”, and to calculate the percent of each response.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb27-2" title="2"></a>
+<a class="sourceLine" id="cb27-3" title="3">data_noun_percent &lt;-<span class="st"> </span>data_noun <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">education =</span> <span class="kw">fct_explicit_na</span>(education, <span class="dt">na_level =</span> <span class="st">&quot;Education unknown&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(education, care_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb27-8" title="8">    <span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n),</a>
+<a class="sourceLine" id="cb27-9" title="9">    <span class="dt">percent =</span> <span class="kw">percent</span>(prop)</a>
+<a class="sourceLine" id="cb27-10" title="10">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-11" title="11"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-12" title="12"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</a>
+<a class="sourceLine" id="cb27-13" title="13"></a>
+<a class="sourceLine" id="cb27-14" title="14">data_noun_percent</a></code></pre></div>
+<pre><code>## # A tibble: 24 x 4
+##    education                        care_data    prop percent
+##    &lt;ord&gt;                            &lt;ord&gt;       &lt;dbl&gt; &lt;chr&gt;  
+##  1 Less than high school degree     Not at all 0.273  27.3%  
+##  2 Less than high school degree     Not much   0.455  45.5%  
+##  3 Less than high school degree     Some       0.182  18.2%  
+##  4 Less than high school degree     A lot      0.0909 9.1%   
+##  5 High school degree               Not at all 0.28   28.0%  
+##  6 High school degree               Not much   0.34   34.0%  
+##  7 High school degree               Some       0.3    30.0%  
+##  8 High school degree               A lot      0.08   8.0%   
+##  9 Some college or Associate degree Not at all 0.2    20.0%  
+## 10 Some college or Associate degree Not much   0.403  40.3%  
+## # … with 14 more rows</code></pre>
+<p>Then reshape the data:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">data_noun_percent_wide &lt;-<span class="st"> </span>data_noun_percent <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>prop) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-3" title="3"><span class="st">  </span><span class="kw">pivot_wider</span>(</a>
+<a class="sourceLine" id="cb29-4" title="4">    <span class="dt">names_from =</span> <span class="st">&quot;care_data&quot;</span>,</a>
+<a class="sourceLine" id="cb29-5" title="5">    <span class="dt">values_from =</span> <span class="st">&quot;percent&quot;</span></a>
+<a class="sourceLine" id="cb29-6" title="6">  )</a>
+<a class="sourceLine" id="cb29-7" title="7"></a>
+<a class="sourceLine" id="cb29-8" title="8">data_noun_percent_wide</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+##   education                        `Not at all` `Not much` Some   `A lot`
+##   &lt;ord&gt;                            &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;  &lt;chr&gt;  
+## 1 Less than high school degree     27.3%        45.5%      18.2%  9.1%   
+## 2 High school degree               28.0%        34.0%      30.0%  8.0%   
+## 3 Some college or Associate degree 20.0%        40.3%      29.8%  9.8%   
+## 4 Bachelor degree                  18.90%       35.47%     35.76% 9.88%  
+## 5 Graduate degree                  13.0%        37.3%      31.9%  17.8%  
+## 6 Education unknown                18%          31%        32%    18%</code></pre>
+<p>Then, we can make a table. We’ll clean up the column names, make sure the education column is left aligned and the responses are right aligned, and add a top header with the question “How much, if at all, do you care about the debate over the use of the word ‘data’ as a singular or plural noun?” above the “Not at all”, “Not much”, “Some”, and “A lot” columns:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="kw">library</span>(kableExtra)</a>
+<a class="sourceLine" id="cb31-2" title="2"></a>
+<a class="sourceLine" id="cb31-3" title="3">data_noun_percent_wide <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-4" title="4"><span class="st">  </span><span class="kw">kable</span>(</a>
+<a class="sourceLine" id="cb31-5" title="5">    <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Education&quot;</span>, <span class="st">&quot;Not at all&quot;</span>, <span class="st">&quot;Not much&quot;</span>, <span class="st">&quot;Some&quot;</span>, <span class="st">&quot;A lot&quot;</span>),</a>
+<a class="sourceLine" id="cb31-6" title="6">    <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;lrrrr&quot;</span>)</a>
+<a class="sourceLine" id="cb31-7" title="7">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-8" title="8"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> <span class="kw">c</span>(<span class="st">&quot; &quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span> =<span class="st"> </span><span class="dv">4</span>))</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="border-bottom:hidden" colspan="1">
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+How much, if at all, do you care about the debate over the use of the word ‘data’ as a singular or plural noun?
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Education
+</th>
+<th style="text-align:right;">
+Not at all
+</th>
+<th style="text-align:right;">
+Not much
+</th>
+<th style="text-align:right;">
+Some
+</th>
+<th style="text-align:right;">
+A lot
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Less than high school degree
+</td>
+<td style="text-align:right;">
+27.3%
+</td>
+<td style="text-align:right;">
+45.5%
+</td>
+<td style="text-align:right;">
+18.2%
+</td>
+<td style="text-align:right;">
+9.1%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+High school degree
+</td>
+<td style="text-align:right;">
+28.0%
+</td>
+<td style="text-align:right;">
+34.0%
+</td>
+<td style="text-align:right;">
+30.0%
+</td>
+<td style="text-align:right;">
+8.0%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Some college or Associate degree
+</td>
+<td style="text-align:right;">
+20.0%
+</td>
+<td style="text-align:right;">
+40.3%
+</td>
+<td style="text-align:right;">
+29.8%
+</td>
+<td style="text-align:right;">
+9.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bachelor degree
+</td>
+<td style="text-align:right;">
+18.90%
+</td>
+<td style="text-align:right;">
+35.47%
+</td>
+<td style="text-align:right;">
+35.76%
+</td>
+<td style="text-align:right;">
+9.88%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Graduate degree
+</td>
+<td style="text-align:right;">
+13.0%
+</td>
+<td style="text-align:right;">
+37.3%
+</td>
+<td style="text-align:right;">
+31.9%
+</td>
+<td style="text-align:right;">
+17.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Education unknown
+</td>
+<td style="text-align:right;">
+18%
+</td>
+<td style="text-align:right;">
+31%
+</td>
+<td style="text-align:right;">
+32%
+</td>
+<td style="text-align:right;">
+18%
+</td>
+</tr>
+</tbody>
+</table>
+<p>Doing this required us to hardcode in the question responses and the number of columns (4) corresponding to them (both for the header above, and for the column alignment). Our code is now fragile if this isn’t known in advance, or could change!</p>
+<p>Instead, we can think about it this way: we know that the first column contains Education and the rest contain the answers. So, we can set the column names, alignment, and the header using attributes of <code>data_noun_percent_wide</code>.</p>
+<p>For <code>col.names</code> and <code>align</code>, we can quickly use <code>names()</code> and <code>ncol()</code>, respectively:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">k &lt;-<span class="st"> </span>data_noun_percent_wide <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb32-2" title="2"><span class="st">  </span><span class="kw">kable</span>(</a>
+<a class="sourceLine" id="cb32-3" title="3">    <span class="dt">col.names =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb32-4" title="4">      <span class="st">&quot;Education&quot;</span>,</a>
+<a class="sourceLine" id="cb32-5" title="5">      <span class="kw">names</span>(data_noun_percent_wide)[<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb32-6" title="6">    ),</a>
+<a class="sourceLine" id="cb32-7" title="7">    <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;l&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;r&quot;</span>, <span class="kw">ncol</span>(data_noun_percent_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb32-8" title="8">  )</a>
+<a class="sourceLine" id="cb32-9" title="9"></a>
+<a class="sourceLine" id="cb32-10" title="10">k</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Education
+</th>
+<th style="text-align:right;">
+Not at all
+</th>
+<th style="text-align:right;">
+Not much
+</th>
+<th style="text-align:right;">
+Some
+</th>
+<th style="text-align:right;">
+A lot
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Less than high school degree
+</td>
+<td style="text-align:right;">
+27.3%
+</td>
+<td style="text-align:right;">
+45.5%
+</td>
+<td style="text-align:right;">
+18.2%
+</td>
+<td style="text-align:right;">
+9.1%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+High school degree
+</td>
+<td style="text-align:right;">
+28.0%
+</td>
+<td style="text-align:right;">
+34.0%
+</td>
+<td style="text-align:right;">
+30.0%
+</td>
+<td style="text-align:right;">
+8.0%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Some college or Associate degree
+</td>
+<td style="text-align:right;">
+20.0%
+</td>
+<td style="text-align:right;">
+40.3%
+</td>
+<td style="text-align:right;">
+29.8%
+</td>
+<td style="text-align:right;">
+9.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bachelor degree
+</td>
+<td style="text-align:right;">
+18.90%
+</td>
+<td style="text-align:right;">
+35.47%
+</td>
+<td style="text-align:right;">
+35.76%
+</td>
+<td style="text-align:right;">
+9.88%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Graduate degree
+</td>
+<td style="text-align:right;">
+13.0%
+</td>
+<td style="text-align:right;">
+37.3%
+</td>
+<td style="text-align:right;">
+31.9%
+</td>
+<td style="text-align:right;">
+17.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Education unknown
+</td>
+<td style="text-align:right;">
+18%
+</td>
+<td style="text-align:right;">
+31%
+</td>
+<td style="text-align:right;">
+32%
+</td>
+<td style="text-align:right;">
+18%
+</td>
+</tr>
+</tbody>
+</table>
+<p>And for the header, we can create a <em>named vector</em> with the number of columns each header spans (again, using <code>ncol()</code>):</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">k_header &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(data_noun_percent_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="kw">names</span>(k_header) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span>)</a>
+<a class="sourceLine" id="cb33-3" title="3"></a>
+<a class="sourceLine" id="cb33-4" title="4">k <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-5" title="5"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> k_header)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="border-bottom:hidden" colspan="1">
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+How much, if at all, do you care about the debate over the use of the word ‘data’ as a singular or plural noun?
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Education
+</th>
+<th style="text-align:right;">
+Not at all
+</th>
+<th style="text-align:right;">
+Not much
+</th>
+<th style="text-align:right;">
+Some
+</th>
+<th style="text-align:right;">
+A lot
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Less than high school degree
+</td>
+<td style="text-align:right;">
+27.3%
+</td>
+<td style="text-align:right;">
+45.5%
+</td>
+<td style="text-align:right;">
+18.2%
+</td>
+<td style="text-align:right;">
+9.1%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+High school degree
+</td>
+<td style="text-align:right;">
+28.0%
+</td>
+<td style="text-align:right;">
+34.0%
+</td>
+<td style="text-align:right;">
+30.0%
+</td>
+<td style="text-align:right;">
+8.0%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Some college or Associate degree
+</td>
+<td style="text-align:right;">
+20.0%
+</td>
+<td style="text-align:right;">
+40.3%
+</td>
+<td style="text-align:right;">
+29.8%
+</td>
+<td style="text-align:right;">
+9.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bachelor degree
+</td>
+<td style="text-align:right;">
+18.90%
+</td>
+<td style="text-align:right;">
+35.47%
+</td>
+<td style="text-align:right;">
+35.76%
+</td>
+<td style="text-align:right;">
+9.88%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Graduate degree
+</td>
+<td style="text-align:right;">
+13.0%
+</td>
+<td style="text-align:right;">
+37.3%
+</td>
+<td style="text-align:right;">
+31.9%
+</td>
+<td style="text-align:right;">
+17.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Education unknown
+</td>
+<td style="text-align:right;">
+18%
+</td>
+<td style="text-align:right;">
+31%
+</td>
+<td style="text-align:right;">
+32%
+</td>
+<td style="text-align:right;">
+18%
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now our code is more robust and can easily adapt to changes in the data (e.g., if there were additional responses).</p>
+<p>We might want to do other things, too, like bold the cell with the highest percent for each of the levels of Education.</p>
+<p>To do this, we can use <code>cell_spec()</code> to set values of <code>percent</code> to bold if they are the highest value of <code>prop</code> (the unformatted <code>percent</code>) for their level of <code>education</code>.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">data_noun_bold_highest_prop &lt;-<span class="st"> </span>data_noun_percent <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(education) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">highest_prop =</span> <span class="kw">max</span>(prop)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> <span class="kw">cell_spec</span>(percent, <span class="dt">format =</span> <span class="st">&quot;html&quot;</span>, <span class="dt">bold =</span> prop <span class="op">==</span><span class="st"> </span>highest_prop))</a>
+<a class="sourceLine" id="cb34-5" title="5"></a>
+<a class="sourceLine" id="cb34-6" title="6">data_noun_bold_highest_prop</a></code></pre></div>
+<pre><code>## # A tibble: 24 x 5
+## # Groups:   education [6]
+##    education           care_data   prop percent                     highest_prop
+##    &lt;ord&gt;               &lt;ord&gt;      &lt;dbl&gt; &lt;chr&gt;                              &lt;dbl&gt;
+##  1 Less than high sch… Not at a… 0.273  &quot;&lt;span style=\&quot;     \&quot; &gt;27…        0.455
+##  2 Less than high sch… Not much  0.455  &quot;&lt;span style=\&quot; font-weigh…        0.455
+##  3 Less than high sch… Some      0.182  &quot;&lt;span style=\&quot;     \&quot; &gt;18…        0.455
+##  4 Less than high sch… A lot     0.0909 &quot;&lt;span style=\&quot;     \&quot; &gt;9.…        0.455
+##  5 High school degree  Not at a… 0.28   &quot;&lt;span style=\&quot;     \&quot; &gt;28…        0.34 
+##  6 High school degree  Not much  0.34   &quot;&lt;span style=\&quot; font-weigh…        0.34 
+##  7 High school degree  Some      0.3    &quot;&lt;span style=\&quot;     \&quot; &gt;30…        0.34 
+##  8 High school degree  A lot     0.08   &quot;&lt;span style=\&quot;     \&quot; &gt;8.…        0.34 
+##  9 Some college or As… Not at a… 0.2    &quot;&lt;span style=\&quot;     \&quot; &gt;20…        0.403
+## 10 Some college or As… Not much  0.403  &quot;&lt;span style=\&quot; font-weigh…        0.403
+## # … with 14 more rows</code></pre>
+<p>This applies HTML formatting to <code>percent</code> (specifically, bold formatting to the highest value for each level of <code>education</code>) that will be picked up by kableExtra.</p>
+<p>Then, we again reshape the data to a wide format and create a table. This time, we need to set <code>escape = FALSE</code> in <code>kable()</code> to let it know that there is HTML in the cells that should <em>not</em> be escaped (i.e., not treated as regular text):</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">data_noun_bold_highest_prop_wide &lt;-<span class="st"> </span>data_noun_bold_highest_prop <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>prop, <span class="op">-</span>highest_prop) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-3" title="3"><span class="st">  </span><span class="kw">pivot_wider</span>(</a>
+<a class="sourceLine" id="cb36-4" title="4">    <span class="dt">names_from =</span> <span class="st">&quot;care_data&quot;</span>,</a>
+<a class="sourceLine" id="cb36-5" title="5">    <span class="dt">values_from =</span> <span class="st">&quot;percent&quot;</span></a>
+<a class="sourceLine" id="cb36-6" title="6">  )</a>
+<a class="sourceLine" id="cb36-7" title="7"></a>
+<a class="sourceLine" id="cb36-8" title="8">k_header &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(data_noun_bold_highest_prop_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb36-9" title="9"><span class="kw">names</span>(k_header) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span>)</a>
+<a class="sourceLine" id="cb36-10" title="10"></a>
+<a class="sourceLine" id="cb36-11" title="11">data_noun_bold_highest_prop_wide <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-12" title="12"><span class="st">  </span><span class="kw">kable</span>(<span class="st">&quot;html&quot;</span>,</a>
+<a class="sourceLine" id="cb36-13" title="13">        <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Education&quot;</span>, <span class="kw">names</span>(data_noun_bold_highest_prop_wide)[<span class="op">-</span><span class="dv">1</span>]),</a>
+<a class="sourceLine" id="cb36-14" title="14">        <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;l&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;r&quot;</span>, <span class="kw">ncol</span>(data_noun_bold_highest_prop_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb36-15" title="15">        <span class="dt">escape =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb36-16" title="16">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-17" title="17"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> k_header)</a></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="border-bottom:hidden" colspan="1">
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+How much, if at all, do you care about the debate over the use of the word ‘data’ as a singular or plural noun?
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Education
+</th>
+<th style="text-align:right;">
+Not at all
+</th>
+<th style="text-align:right;">
+Not much
+</th>
+<th style="text-align:right;">
+Some
+</th>
+<th style="text-align:right;">
+A lot
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Less than high school degree
+</td>
+<td style="text-align:right;">
+<span style="     ">27.3%</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    ">45.5%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">18.2%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">9.1%</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+High school degree
+</td>
+<td style="text-align:right;">
+<span style="     ">28.0%</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    ">34.0%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">30.0%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">8.0%</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Some college or Associate degree
+</td>
+<td style="text-align:right;">
+<span style="     ">20.0%</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    ">40.3%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">29.8%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">9.8%</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bachelor degree
+</td>
+<td style="text-align:right;">
+<span style="     ">18.90%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">35.47%</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    ">35.76%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">9.88%</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Graduate degree
+</td>
+<td style="text-align:right;">
+<span style="     ">13.0%</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    ">37.3%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">31.9%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">17.8%</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Education unknown
+</td>
+<td style="text-align:right;">
+<span style="     ">18%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">31%</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    ">32%</span>
+</td>
+<td style="text-align:right;">
+<span style="     ">18%</span>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This way, we can apply formatting based on specific values of the data, which may change.</p>
 </div>
 <div id="take-advantage-of-pdf-only-features" class="section level2">
 <h2><span class="header-section-number">5.5</span> Take advantage of PDF-only features</h2>
 <p>Example code that will allow us to embed PDF-only table output. This
 uses a couple of basic examples of doing this, with code from the <code>dslabs</code> package.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb25-2" title="2"><span class="kw">library</span>(dslabs)</a>
-<a class="sourceLine" id="cb25-3" title="3"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a>
-<a class="sourceLine" id="cb25-4" title="4">top_<span class="dv">10</span>_data &lt;-<span class="st"> </span>us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-5" title="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total_count =</span> <span class="kw">sum</span>(count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-8" title="8"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total_count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb25-9" title="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb37-2" title="2"><span class="kw">library</span>(dslabs)</a>
+<a class="sourceLine" id="cb37-3" title="3"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a>
+<a class="sourceLine" id="cb37-4" title="4">top_<span class="dv">10</span>_data &lt;-<span class="st"> </span>us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb37-5" title="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb37-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb37-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total_count =</span> <span class="kw">sum</span>(count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb37-8" title="8"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total_count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb37-9" title="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) </a></code></pre></div>
 <p>Then, you can use the <code>kable</code> function to create a basic PDF table:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>) </a></code></pre></div>
 <p>The <code>booktabs = TRUE</code> option, if you include it in the <code>kable</code> function call, will give
 some cleaner default formatting for the table:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>, <span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb39-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>, <span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
 
 </div>
 </div>
