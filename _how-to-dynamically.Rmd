@@ -1,1 +1,133 @@
 ## Dynamically make changes
+
+You might want to make changes to your tables that depend on features of your data that aren't known in advance or can't be hardcoded.
+
+Let's look at the `comma_survey` data set, which polled Americans on the oxford comma and other grammatical concepts. In particular, we'll look at the education of those who care about the debate of whether "data" is a singular or plural noun:
+  
+```{r}
+library(fivethirtyeight)
+library(tidyverse)
+
+data_noun <- comma_survey %>%
+  filter(!is.na(care_data)) %>%
+  select(education, care_data)
+
+data_noun
+```
+
+We want to make a table of what percent, by education, answered each of "Not much", "Not at all", "Some", and "A lot" to the question: "How much, if at all, do you care about the debate over the use of the word "data" as a singular or plural noun?". 
+
+First, we need to do some wrangling to replace `NA` values of `Education` with "Education unknown", and to calculate the percent of each response.
+
+```{r, message = FALSE, warning = FALSE}
+library(scales)
+
+data_noun_percent <- data_noun %>%
+  mutate(education = fct_explicit_na(education, na_level = "Education unknown")) %>%
+  group_by(education, care_data) %>%
+  summarise(n = n()) %>%
+  mutate(
+    prop = n / sum(n),
+    percent = percent(prop)
+  ) %>%
+  ungroup() %>%
+  select(-n)
+
+data_noun_percent
+```
+
+Then reshape the data:
+  
+```{r}
+data_noun_percent_wide <- data_noun_percent %>%
+  select(-prop) %>%
+  pivot_wider(
+    names_from = "care_data",
+    values_from = "percent"
+  )
+
+data_noun_percent_wide
+```
+
+Then, we can make a table. We'll clean up the column names, make sure the education column is left aligned and the responses are right aligned, and add a top header with the question "How much, if at all, do you care about the debate over the use of the word 'data' as a singular or plural noun?" above the "Not at all", "Not much", "Some", and "A lot" columns:
+
+```{r}
+library(kableExtra)
+
+data_noun_percent_wide %>%
+  kable(
+    col.names = c("Education", "Not at all", "Not much", "Some", "A lot"),
+    align = c("lrrrr")
+  ) %>%
+  add_header_above(header = c(" " = 1, "How much, if at all, do you care about the debate over the use of the word 'data' as a singular or plural noun?" = 4))
+```
+
+Doing this required us to hardcode in the question responses and the number of columns (4) corresponding to them (both for the header above, and for the column alignment). Our code is now fragile if this isn't known in advance, or could change!
+  
+Instead, we can think about it this way: we know that the first column contains Education and the rest contain the answers. So, we can set the column names, alignment, and the header using attributes of `data_noun_percent_wide`.
+
+For `col.names` and `align`, we can quickly use `names()` and `ncol()`, respectively:
+  
+```{r}
+k <- data_noun_percent_wide %>%
+  kable(
+    col.names = c(
+      "Education",
+      names(data_noun_percent_wide)[-1]
+    ),
+    align = c("l", rep("r", ncol(data_noun_percent_wide) - 1))
+  )
+
+k
+```
+
+And for the header, we can create a *named vector* with the number of columns each header spans (again, using `ncol()`):
+  
+```{r}
+k_header <- c(1, ncol(data_noun_percent_wide) - 1)
+names(k_header) <- c(" ", "How much, if at all, do you care about the debate over the use of the word 'data' as a singular or plural noun?")
+
+k %>%
+  add_header_above(header = k_header)
+```
+
+Now our code is more robust and can easily adapt to changes in the data (e.g., if there were additional responses).
+
+We might want to do other things, too, like bold the cell with the highest percent for each of the levels of Education.
+
+To do this, we can use `cell_spec()` to set values of `percent` to bold if they are the highest value of `prop` (the unformatted `percent`) for their level of `education`.
+
+```{r}
+data_noun_bold_highest_prop <- data_noun_percent %>%
+  group_by(education) %>%
+  mutate(highest_prop = max(prop)) %>%
+  mutate(percent = cell_spec(percent, format = "html", bold = prop == highest_prop))
+
+data_noun_bold_highest_prop
+```
+
+This applies HTML formatting to `percent` (specifically, bold formatting to the highest value for each level of `education`) that will be picked up by kableExtra.
+
+Then, we again reshape the data to a wide format and create a table. This time, we need to set `escape = FALSE` in `kable()` to let it know that there is HTML in the cells that should *not* be escaped (i.e., not treated as regular text):
+  
+```{r}
+data_noun_bold_highest_prop_wide <- data_noun_bold_highest_prop %>%
+  select(-prop, -highest_prop) %>%
+  pivot_wider(
+    names_from = "care_data",
+    values_from = "percent"
+  )
+
+k_header <- c(1, ncol(data_noun_bold_highest_prop_wide) - 1)
+names(k_header) <- c(" ", "How much, if at all, do you care about the debate over the use of the word 'data' as a singular or plural noun?")
+
+data_noun_bold_highest_prop_wide %>%
+  kable("html",
+        col.names = c("Education", names(data_noun_bold_highest_prop_wide)[-1]),
+        align = c("l", rep("r", ncol(data_noun_bold_highest_prop_wide) - 1)),
+        escape = FALSE
+  ) %>%
+  add_header_above(header = k_header)
+```
+
+This way, we can apply formatting based on specific values of the data, which may change.
