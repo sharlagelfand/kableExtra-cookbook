@@ -10,11 +10,6 @@ This repo is pretty empty, but it's up so it can be worked on at the Chicago R C
 
 # Building the book
 
-Install the R packages used by the book with:
-
-# install.packages("devtools")
-devtools::install_deps()
-
 In RStudio, press Cmd/Ctrl + Shift + B. Or run:
 
 ```r
