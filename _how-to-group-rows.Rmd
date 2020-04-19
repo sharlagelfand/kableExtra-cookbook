@@ -25,6 +25,7 @@ per_hepa_latest_years <- us_contagious_diseases %>%
   # Calculate the average weekly count from the total yearly count and
   # the number of weeks reporting (should check data---does an 
   # 'unreported' week mean there were no cases that week?)
+  ungroup() %>% 
   mutate(ave_weekly_count = count / weeks_reporting) %>%
   # Limit to only the data to show in the table
   select(state, disease, year, ave_weekly_count) %>% 
@@ -32,5 +33,36 @@ per_hepa_latest_years <- us_contagious_diseases %>%
   arrange(disease, state, year) %>% 
   # "Widen" the data for a nicer table
   pivot_wider(names_from = year, values_from = ave_weekly_count)
+```
+
+This dataframe  gives the average weekly counts of 
+two diseases (separately) in three west coast states over the last five years of reporting. The 
+code used to create this dataset is an extension of the code used in the section on 
+adding top headings to tables---in this case, we're adding on data for a second disease. 
+
+Here's what the dataframe looks like: 
+
+```{r}
+per_hepa_latest_years
+```
+
+When we create a table from this, we may want to group the rows by disease (or by state),
+so that readers can see common factors in certain rows.
+
+You can create those groupings using the `pack_rows` function. You will include one
+of these for each of the groupings that you want to create. For example, here there's
+one `pack_rows` to group the first three rows (all with measurements of Hepatitis A)
+and a second `pack_rows` to group the fourth through six rows (all with measurements
+of pertussis). For each `pack_rows` call, it gives the name that will be used for 
+the grouping (this is the name that shows up as a label for those groups in the 
+table) as well as the number of the line where the grouping should start (`start_row`)
+and the line where it should end (`end_row`):
+
+```{r}
+per_hepa_latest_years %>% 
+  select(-disease) %>% 
+  kable(digits = 1) %>% 
+  pack_rows("Hepatitis A", start_row = 1, end_row = 3) %>% 
+  pack_rows("Pertussis", start_row = 4, end_row = 6)
 ```
 
