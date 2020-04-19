@@ -1723,6 +1723,197 @@ Washington
 </tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="co"># Limit to states in the region of interest</span></a>
+<a class="sourceLine" id="cb27-3" title="3"><span class="st">  </span><span class="kw">filter</span>(state <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;California&quot;</span>, <span class="st">&quot;Oregon&quot;</span>, <span class="st">&quot;Washington&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-4" title="4"><span class="st">  </span><span class="co"># Limit to the disease of interest</span></a>
+<a class="sourceLine" id="cb27-5" title="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pertussis&quot;</span>, <span class="st">&quot;Hepatitis A&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-6" title="6"><span class="st">  </span><span class="co"># Limit to the latest five years reported for each state</span></a>
+<a class="sourceLine" id="cb27-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(state, disease) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-8" title="8"><span class="st">  </span><span class="kw">slice_max</span>(<span class="dt">order_by =</span> year, <span class="dt">n =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-9" title="9"><span class="st">  </span><span class="co"># Calculate the average weekly count from the total yearly count and</span></a>
+<a class="sourceLine" id="cb27-10" title="10"><span class="st">  </span><span class="co"># the number of weeks reporting (should check data---does an </span></a>
+<a class="sourceLine" id="cb27-11" title="11"><span class="st">  </span><span class="co"># &#39;unreported&#39; week mean there were no cases that week?)</span></a>
+<a class="sourceLine" id="cb27-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ave_weekly_count =</span> count <span class="op">/</span><span class="st"> </span>weeks_reporting) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-13" title="13"><span class="st">  </span><span class="co"># Limit to only the data to show in the table</span></a>
+<a class="sourceLine" id="cb27-14" title="14"><span class="st">  </span><span class="kw">select</span>(state, disease, year, ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-15" title="15"><span class="st">  </span><span class="co"># Reorder by year so that the earliest year comes first</span></a>
+<a class="sourceLine" id="cb27-16" title="16"><span class="st">  </span><span class="kw">arrange</span>(year) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-17" title="17"><span class="st">  </span><span class="co"># &quot;Widen&quot; the data for a nicer table</span></a>
+<a class="sourceLine" id="cb27-18" title="18"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> year, <span class="dt">values_from =</span> ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-19" title="19"><span class="st">  </span><span class="co"># Only report one digit (i.e., after the decimal place) for each number</span></a>
+<a class="sourceLine" id="cb27-20" title="20"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb27-21" title="21">        <span class="dt">caption =</span> <span class="st">&quot;Average weekly number of cases of pertussis in west coast states for the last five years of reporting.&quot;</span>)</a></code></pre></div>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-10">Table 4.3: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+state
+</th>
+<th style="text-align:left;">
+disease
+</th>
+<th style="text-align:right;">
+2007
+</th>
+<th style="text-align:right;">
+2008
+</th>
+<th style="text-align:right;">
+2009
+</th>
+<th style="text-align:right;">
+2010
+</th>
+<th style="text-align:right;">
+2011
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:left;">
+Hepatitis A
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:left;">
+Pertussis
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+7.1
+</td>
+<td style="text-align:right;">
+10.4
+</td>
+<td style="text-align:right;">
+26.4
+</td>
+<td style="text-align:right;">
+23.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oregon
+</td>
+<td style="text-align:left;">
+Hepatitis A
+</td>
+<td style="text-align:right;">
+0.6
+</td>
+<td style="text-align:right;">
+0.6
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oregon
+</td>
+<td style="text-align:left;">
+Pertussis
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Washington
+</td>
+<td style="text-align:left;">
+Hepatitis A
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:right;">
+0.9
+</td>
+<td style="text-align:right;">
+0.9
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:right;">
+0.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Washington
+</td>
+<td style="text-align:left;">
+Pertussis
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+9.1
+</td>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+11.7
+</td>
+<td style="text-align:right;">
+15.2
+</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>

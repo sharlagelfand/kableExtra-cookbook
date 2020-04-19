@@ -1,1 +1,176 @@
 ## Add a top header
+
+You can also add headers above certain column names, to help distinguish groupings. 
+
+For this section, we'll use an example based on the "us_contagious_diseases" data
+from the `dslabs` package. The following code will load that data and then create the
+`pertussis_latest_years` dataframe from it:
+
+```{r}
+library(tidyverse)
+library(dslabs)
+data("us_contagious_diseases")
+
+pertussis_latest_years <- us_contagious_diseases %>% 
+  # Limit to states in the region of interest
+  filter(state %in% c("California", "Oregon", "Washington")) %>% 
+  # Limit to the disease of interest
+  filter(disease == "Pertussis") %>% 
+  # Limit to the latest five years reported for each state
+  group_by(state) %>% 
+  slice_max(order_by = year, n = 5) %>% 
+  # Calculate the average weekly count from the total yearly count and
+  # the number of weeks reporting (should check data---does an 
+  # 'unreported' week mean there were no cases that week?)
+  mutate(ave_weekly_count = count / weeks_reporting) %>%
+  # Limit to only the data to show in the table
+  select(state, year, ave_weekly_count) %>% 
+  # Reorder by year so that the earliest year comes first
+  arrange(year) %>% 
+  # "Widen" the data for a nicer table
+  pivot_wider(names_from = year, values_from = ave_weekly_count)
+```
+
+This dataframe gives average weekly counts of 
+pertussis in three west coast states over the last five years of reporting. The 
+code used to create this dataset from the original data is discussed in a previous
+section of this book.
+
+Previously, we created this table from the data:
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.")
+```
+
+We might want to add a top header over the five columns that show years, to distinguish
+that those are all similar types of columns. With `kableExtra`, this can be added with 
+the function `add_header_above`. The convention for this argument is to include a value
+for `header` that's a vector; this vector will give the names to use for top-level headers
+as well as the number of columns they should span. In this case, we'd like to not add 
+anything over the "state" column, so we can use the marker `" "` to indicate that 
+no top-level header should be added. For all the other columns, we'll add "Year". 
+Since we only have one column (the first) that will lack a top-level header, and 
+then five (the years) that will all get the same header ("Year"), we can express
+that in the "header" argument as `c(" " = 1, "Year" = 5)`. In other words, don't 
+have a top-level header for one column, and then have one named "Year" that spans
+five columns. 
+
+Here's the result:
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "Year" = 5))
+```
+
+In the `add_header_above` call, you'll need to make sure that you specify values
+for all the columns in your table. In other words, all the numbers in that argument
+should add up to the number of columns that you have. In this case, we have six
+columns in the table (the "state" column plus each of the yearly ones). Since
+5 + 1 = 6, we're good here. 
+
+Here's another example, where separate headers are added for the first two then the
+next three years: 
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "First two years" = 2, "Next three years" = 3))
+```
+
+Again, you can see that 1 + 2 + 3 = 6, so we've covered all of our columns in the 
+table. 
+
+You can change the formatting of the header in the `add_header_above` call, as well. 
+For example, you can change it to be in italics with `italic = TRUE`:
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "Year" = 5), 
+                   italic = TRUE)
+```
+
+You can change the alignment, too. The default is to be centered over the columns that
+it spans, but you can change that with `align`. For example, `align = "l"` would change 
+it to be left-aligned: 
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "Year" = 5), 
+                   align = "l")
+```
+
+You can change the color of both the text and the background color for this new
+header section with teh `color` and `background` arguments, respectively: 
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "Year" = 5), 
+                   color = "white",
+                   background = "lightsalmon")
+```
+
+You can change the angle of the text for the new header with `angle`:
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "Year" = 5), 
+                   angle = -45)
+```
+
+If you'd like the text for a column to have a line break, you can include the 
+code for a new line ("\n") inside the column name:
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "Year\n(Georgian calendar)" = 5))
+```
+
+If you have more than one top-level header, you may want to change the amount
+of separation between each group. You can do that with the `line_sep` argument. 
+Here is the example table where separate top-level headers are added for the 
+first two years versus the last three from earlier: 
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "First two years" = 2, "Next three years" = 3))
+```
+
+If you set `line_sep = 0`, then you'll see that there's no space between the two 
+header sections, so the line under the two headers runs together into one line:
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "First two years" = 2, "Next three years" = 3),
+                   line_sep = 0)
+```
+
+On the other hand, if you set `line_sep` to a value higher than it's default of 3, 
+you can increase the separation in the headers: 
+
+```{r}
+pertussis_latest_years %>% 
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.") %>% 
+  add_header_above(header = c(" " = 1, "First two years" = 2, "Next three years" = 3),
+                   line_sep = 10)
+```
+
