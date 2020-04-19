@@ -1,6 +1,6 @@
 # kableExtra Cookbook
 
-This repo is the home of a very bare bones (empty, even!) cookbook that will contain snippets and examples of how to use the [kableExtra](https://haozhu233.github.io/kableExtra/) R package, which can create highly-customized tables in PDF and HTML.
+This repo is the home of a very bare bones [cookbook](https://sharlagelfand.github.io/kableExtra-cookbook/) that will contain snippets and examples of how to use the [kableExtra](https://haozhu233.github.io/kableExtra/) R package, which can create highly-customized tables in PDF and HTML.
 
 The goal of this book is twofold: first, to show quick and self-contained examples of how to solve common table-formatting problems (e.g. making a table full width, adding captions, changing columns and alignment, etc). 
 
