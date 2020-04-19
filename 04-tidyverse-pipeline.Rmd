@@ -6,6 +6,13 @@ clean your data before piping that data into `kable` and `kableExtra` functions 
 create the table. This section will walk through some examples of this pipeline, and 
 how it can provide a powerful approach for creating tables from data in R. 
 
+To run this code, please be sure to load these packages: 
+
+```{r}
+library(tidyverse)
+library(knitr)
+```
+
 ## Example data
 
 Again, this section uses a dataset from the `dslabs` package called "us_contagious_diseases".
@@ -27,6 +34,8 @@ like to calculate rates):
 us_contagious_diseases %>% 
   slice(1:4)
 ```
+
+## Example 1
 
 One quick table we might want to create may be a table where each state is listed, 
 with the range of years that the state reported data. This way, we can quickly see 
@@ -59,10 +68,42 @@ us_contagious_diseases %>%
   # Reshape the data, so that each disease gets its own column
   pivot_wider(names_from = "disease", values_from = "years") %>% 
   # Send to `kable` for formatting as a table
-  kable(booktabs = TRUE) %>% 
+  kable(booktabs = TRUE,
+                caption = "Years of reporting for each state and disease.") %>% 
   # Make the font size a bit smaller than the default, so the date ranges
   # will be shown on one line each
   kable_styling(font_size = 10)
 ```
 
+## Example 2
+
+As another example, you might want to use this data to create a table that shows 
+the number of cases of a specific disease as it's changed over the last five years
+of reporting in a certain region. For example, you could pull data on states along
+the west coast of the US (California, Oregon, and Washington) and look at changes in 
+pertussis over the last five available years.
+
+```{r}
+us_contagious_diseases %>% 
+  # Limit to states in the region of interest
+  filter(state %in% c("California", "Oregon", "Washington")) %>% 
+  # Limit to the disease of interest
+  filter(disease == "Pertussis") %>% 
+  # Limit to the latest five years reported for each state
+  group_by(state) %>% 
+  slice_max(order_by = year, n = 5) %>% 
+  # Calculate the average weekly count from the total yearly count and
+  # the number of weeks reporting (should check data---does an 
+  # 'unreported' week mean there were no cases that week?)
+  mutate(ave_weekly_count = count / weeks_reporting) %>%
+  # Limit to only the data to show in the table
+  select(state, year, ave_weekly_count) %>% 
+  # Reorder by year so that the earliest year comes first
+  arrange(year) %>% 
+  # "Widen" the data for a nicer table
+  pivot_wider(names_from = year, values_from = ave_weekly_count) %>% 
+  # Only report one digit (i.e., after the decimal place) for each number
+  kable(digits = 1,
+        caption = "Average weekly number of cases of pertussis in west coast states for the last five years of reporting.")
+```
 
