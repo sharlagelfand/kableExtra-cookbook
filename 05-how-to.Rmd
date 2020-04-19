@@ -6,6 +6,9 @@
 ```{r, child = "_how-to-top-header.Rmd"}
 ```
 
+```{r, child = "_how-to-group-rows.Rmd"}
+```
+
 ```{r, child = "_how-to-bold.Rmd"}
 ```
 

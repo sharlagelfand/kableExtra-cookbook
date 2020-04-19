@@ -1,0 +1,36 @@
+## Group rows
+
+You might also want to show structure or grouping within your rows. There
+are a number of functions in `kableExtra` that help with this. 
+
+These examples will again use data derived from the "us_contagious_diseases" data
+from the `dslabs` package. The following code will load that data and then create the
+`per_hepa_latest_years` dataframe from it:
+
+```{r}
+library(tidyverse)
+library(dslabs)
+data("us_contagious_diseases")
+
+per_hepa_latest_years <- us_contagious_diseases %>% 
+  # Limit to states in the region of interest
+  filter(state %in% c("California", "Oregon", "Washington")) %>% 
+  # Limit to the two diseases of interest
+  filter(disease %in% c("Pertussis", "Hepatitis A")) %>% 
+  # Limit to the latest five years reported for each combination of 
+  # state and disease
+  group_by(state, disease) %>% 
+  arrange(desc(year)) %>%
+  slice(1:5) %>%
+  # Calculate the average weekly count from the total yearly count and
+  # the number of weeks reporting (should check data---does an 
+  # 'unreported' week mean there were no cases that week?)
+  mutate(ave_weekly_count = count / weeks_reporting) %>%
+  # Limit to only the data to show in the table
+  select(state, disease, year, ave_weekly_count) %>% 
+  # Reorder by year so that the earliest year comes first
+  arrange(disease, state, year) %>% 
+  # "Widen" the data for a nicer table
+  pivot_wider(names_from = year, values_from = ave_weekly_count)
+```
+

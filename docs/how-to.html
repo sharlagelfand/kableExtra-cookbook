@@ -155,9 +155,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="how-to.html"><a href="how-to.html"><i class="fa fa-check"></i><b>5</b> How to…</a><ul>
 <li class="chapter" data-level="5.1" data-path="how-to.html"><a href="how-to.html#make-a-table-full-width"><i class="fa fa-check"></i><b>5.1</b> Make a table full width</a></li>
 <li class="chapter" data-level="5.2" data-path="how-to.html"><a href="how-to.html#add-a-top-header"><i class="fa fa-check"></i><b>5.2</b> Add a top header</a></li>
-<li class="chapter" data-level="5.3" data-path="how-to.html"><a href="how-to.html#bold-columns-or-rows"><i class="fa fa-check"></i><b>5.3</b> Bold columns or rows</a></li>
-<li class="chapter" data-level="5.4" data-path="how-to.html"><a href="how-to.html#dynamically-make-changes"><i class="fa fa-check"></i><b>5.4</b> Dynamically make changes</a></li>
-<li class="chapter" data-level="5.5" data-path="how-to.html"><a href="how-to.html#take-advantage-of-pdf-only-features"><i class="fa fa-check"></i><b>5.5</b> Take advantage of PDF-only features</a></li>
+<li class="chapter" data-level="5.3" data-path="how-to.html"><a href="how-to.html#group-rows"><i class="fa fa-check"></i><b>5.3</b> Group rows</a></li>
+<li class="chapter" data-level="5.4" data-path="how-to.html"><a href="how-to.html#bold-columns-or-rows"><i class="fa fa-check"></i><b>5.4</b> Bold columns or rows</a></li>
+<li class="chapter" data-level="5.5" data-path="how-to.html"><a href="how-to.html#dynamically-make-changes"><i class="fa fa-check"></i><b>5.5</b> Dynamically make changes</a></li>
+<li class="chapter" data-level="5.6" data-path="how-to.html"><a href="how-to.html#take-advantage-of-pdf-only-features"><i class="fa fa-check"></i><b>5.6</b> Take advantage of PDF-only features</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="wild-caught-tables.html"><a href="wild-caught-tables.html"><i class="fa fa-check"></i><b>6</b> Wild-caught Tables</a></li>
 <li class="divider"></li>
@@ -202,17 +203,18 @@ from the <code>dslabs</code> package. The following code will load that data and
 <a class="sourceLine" id="cb27-9" title="9"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb27-10" title="10"><span class="st">  </span><span class="co"># Limit to the latest five years reported for each state</span></a>
 <a class="sourceLine" id="cb27-11" title="11"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-12" title="12"><span class="st">  </span><span class="kw">slice_max</span>(<span class="dt">order_by =</span> year, <span class="dt">n =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-13" title="13"><span class="st">  </span><span class="co"># Calculate the average weekly count from the total yearly count and</span></a>
-<a class="sourceLine" id="cb27-14" title="14"><span class="st">  </span><span class="co"># the number of weeks reporting (should check data---does an </span></a>
-<a class="sourceLine" id="cb27-15" title="15"><span class="st">  </span><span class="co"># &#39;unreported&#39; week mean there were no cases that week?)</span></a>
-<a class="sourceLine" id="cb27-16" title="16"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ave_weekly_count =</span> count <span class="op">/</span><span class="st"> </span>weeks_reporting) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-17" title="17"><span class="st">  </span><span class="co"># Limit to only the data to show in the table</span></a>
-<a class="sourceLine" id="cb27-18" title="18"><span class="st">  </span><span class="kw">select</span>(state, year, ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-19" title="19"><span class="st">  </span><span class="co"># Reorder by year so that the earliest year comes first</span></a>
-<a class="sourceLine" id="cb27-20" title="20"><span class="st">  </span><span class="kw">arrange</span>(year) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-21" title="21"><span class="st">  </span><span class="co"># &quot;Widen&quot; the data for a nicer table</span></a>
-<a class="sourceLine" id="cb27-22" title="22"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> year, <span class="dt">values_from =</span> ave_weekly_count)</a></code></pre></div>
+<a class="sourceLine" id="cb27-12" title="12"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(year)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-13" title="13"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-14" title="14"><span class="st">  </span><span class="co"># Calculate the average weekly count from the total yearly count and</span></a>
+<a class="sourceLine" id="cb27-15" title="15"><span class="st">  </span><span class="co"># the number of weeks reporting (should check data---does an </span></a>
+<a class="sourceLine" id="cb27-16" title="16"><span class="st">  </span><span class="co"># &#39;unreported&#39; week mean there were no cases that week?)</span></a>
+<a class="sourceLine" id="cb27-17" title="17"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ave_weekly_count =</span> count <span class="op">/</span><span class="st"> </span>weeks_reporting) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-18" title="18"><span class="st">  </span><span class="co"># Limit to only the data to show in the table</span></a>
+<a class="sourceLine" id="cb27-19" title="19"><span class="st">  </span><span class="kw">select</span>(state, year, ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-20" title="20"><span class="st">  </span><span class="co"># Reorder by year so that the earliest year comes first</span></a>
+<a class="sourceLine" id="cb27-21" title="21"><span class="st">  </span><span class="kw">arrange</span>(year) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-22" title="22"><span class="st">  </span><span class="co"># &quot;Widen&quot; the data for a nicer table</span></a>
+<a class="sourceLine" id="cb27-23" title="23"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> year, <span class="dt">values_from =</span> ave_weekly_count)</a></code></pre></div>
 <p>This dataframe gives average weekly counts of
 pertussis in three west coast states over the last five years of reporting. The
 code used to create this dataset from the original data is discussed in a previous
@@ -223,7 +225,7 @@ section of this book.</p>
 <a class="sourceLine" id="cb28-3" title="3">        <span class="dt">caption =</span> <span class="st">&quot;Average weekly number of cases of pertussis in west coast states for the last five years of reporting.&quot;</span>)</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-33">Table 5.1: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-34">Table 5.1: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -329,7 +331,7 @@ five columns.</p>
 <a class="sourceLine" id="cb29-4" title="4"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> <span class="kw">c</span>(<span class="st">&quot; &quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;Year&quot;</span> =<span class="st"> </span><span class="dv">5</span>))</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-34">Table 5.2: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-35">Table 5.2: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -438,7 +440,7 @@ next three years:</p>
 <a class="sourceLine" id="cb30-4" title="4"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> <span class="kw">c</span>(<span class="st">&quot; &quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;First two years&quot;</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">&quot;Next three years&quot;</span> =<span class="st"> </span><span class="dv">3</span>))</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-35">Table 5.3: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-36">Table 5.3: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -552,7 +554,7 @@ top-level headers in the previous example with:</p>
 <a class="sourceLine" id="cb31-5" title="5"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> <span class="kw">c</span>(<span class="st">&quot; &quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;Year&quot;</span> =<span class="st"> </span><span class="dv">5</span>))</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-36">Table 5.4: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-37">Table 5.4: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -671,7 +673,7 @@ For example, you can change it to be in italics with <code>italic = TRUE</code>:
 <a class="sourceLine" id="cb32-5" title="5">                   <span class="dt">italic =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-37">Table 5.5: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-38">Table 5.5: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -777,7 +779,7 @@ it to be left-aligned:</p>
 <a class="sourceLine" id="cb33-5" title="5">                   <span class="dt">align =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-38">Table 5.6: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-39">Table 5.6: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -883,7 +885,7 @@ header section with teh <code>color</code> and <code>background</code> arguments
 <a class="sourceLine" id="cb34-6" title="6">                   <span class="dt">background =</span> <span class="st">&quot;lightsalmon&quot;</span>)</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-39">Table 5.7: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-40">Table 5.7: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -987,7 +989,7 @@ Washington
 <a class="sourceLine" id="cb35-5" title="5">                   <span class="dt">angle =</span> <span class="dv">-45</span>)</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-40">Table 5.8: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-41">Table 5.8: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -1091,7 +1093,7 @@ code for a new line (“”) inside the column name:</p>
 <a class="sourceLine" id="cb36-4" title="4"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> <span class="kw">c</span>(<span class="st">&quot; &quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;Year</span><span class="ch">\n</span><span class="st">(Georgian calendar)&quot;</span> =<span class="st"> </span><span class="dv">5</span>))</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-41">Table 5.9: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-42">Table 5.9: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -1197,7 +1199,7 @@ first two years versus the last three from earlier:</p>
 <a class="sourceLine" id="cb37-4" title="4"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> <span class="kw">c</span>(<span class="st">&quot; &quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;First two years&quot;</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">&quot;Next three years&quot;</span> =<span class="st"> </span><span class="dv">3</span>))</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-42">Table 5.10: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-43">Table 5.10: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -1307,7 +1309,7 @@ header sections, so the line under the two headers runs together into one line:<
 <a class="sourceLine" id="cb38-5" title="5">                   <span class="dt">line_sep =</span> <span class="dv">0</span>)</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-43">Table 5.11: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-44">Table 5.11: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -1417,7 +1419,7 @@ you can increase the separation in the headers:</p>
 <a class="sourceLine" id="cb39-5" title="5">                   <span class="dt">line_sep =</span> <span class="dv">10</span>)</a></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-44">Table 5.12: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
+<span id="tab:unnamed-chunk-45">Table 5.12: </span>Average weekly number of cases of pertussis in west coast states for the last five years of reporting.
 </caption>
 <thead>
 <tr>
@@ -1519,24 +1521,56 @@ Washington
 </tbody>
 </table>
 </div>
-<div id="bold-columns-or-rows" class="section level2">
-<h2><span class="header-section-number">5.3</span> Bold columns or rows</h2>
-<p>When tables have a lot of content, you may want to highlight elements to draw attention to them. This example uses data from the <code>AmesHousing</code> package.</p>
+<div id="group-rows" class="section level2">
+<h2><span class="header-section-number">5.3</span> Group rows</h2>
+<p>You might also want to show structure or grouping within your rows. There
+are a number of functions in <code>kableExtra</code> that help with this.</p>
+<p>These examples will again use data derived from the “us_contagious_diseases” data
+from the <code>dslabs</code> package. The following code will load that data and then create the
+<code>per_hepa_latest_years</code> dataframe from it:</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb40-2" title="2"><span class="kw">library</span>(AmesHousing)</a>
-<a class="sourceLine" id="cb40-3" title="3"></a>
-<a class="sourceLine" id="cb40-4" title="4">top_neighborhoods &lt;-<span class="st"> </span><span class="kw">make_ames</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb40-5" title="5"><span class="st">  </span><span class="kw">filter</span>(Year_Sold <span class="op">==</span><span class="st"> </span><span class="dv">2010</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb40-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(Neighborhood) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb40-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">Home_Sales =</span> <span class="kw">n</span>(),</a>
-<a class="sourceLine" id="cb40-8" title="8">            <span class="dt">Total =</span> scales<span class="op">::</span><span class="kw">dollar</span>(<span class="kw">sum</span>(Sale_Price))) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb40-9" title="9"><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>Home_Sales) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb40-10" title="10"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb40-2" title="2"><span class="kw">library</span>(dslabs)</a>
+<a class="sourceLine" id="cb40-3" title="3"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a>
+<a class="sourceLine" id="cb40-4" title="4"></a>
+<a class="sourceLine" id="cb40-5" title="5">per_hepa_latest_years &lt;-<span class="st"> </span>us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-6" title="6"><span class="st">  </span><span class="co"># Limit to states in the region of interest</span></a>
+<a class="sourceLine" id="cb40-7" title="7"><span class="st">  </span><span class="kw">filter</span>(state <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;California&quot;</span>, <span class="st">&quot;Oregon&quot;</span>, <span class="st">&quot;Washington&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-8" title="8"><span class="st">  </span><span class="co"># Limit to the two diseases of interest</span></a>
+<a class="sourceLine" id="cb40-9" title="9"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pertussis&quot;</span>, <span class="st">&quot;Hepatitis A&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-10" title="10"><span class="st">  </span><span class="co"># Limit to the latest five years reported for each combination of </span></a>
+<a class="sourceLine" id="cb40-11" title="11"><span class="st">  </span><span class="co"># state and disease</span></a>
+<a class="sourceLine" id="cb40-12" title="12"><span class="st">  </span><span class="kw">group_by</span>(state, disease) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-13" title="13"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(year)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb40-14" title="14"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb40-15" title="15"><span class="st">  </span><span class="co"># Calculate the average weekly count from the total yearly count and</span></a>
+<a class="sourceLine" id="cb40-16" title="16"><span class="st">  </span><span class="co"># the number of weeks reporting (should check data---does an </span></a>
+<a class="sourceLine" id="cb40-17" title="17"><span class="st">  </span><span class="co"># &#39;unreported&#39; week mean there were no cases that week?)</span></a>
+<a class="sourceLine" id="cb40-18" title="18"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ave_weekly_count =</span> count <span class="op">/</span><span class="st"> </span>weeks_reporting) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb40-19" title="19"><span class="st">  </span><span class="co"># Limit to only the data to show in the table</span></a>
+<a class="sourceLine" id="cb40-20" title="20"><span class="st">  </span><span class="kw">select</span>(state, disease, year, ave_weekly_count) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-21" title="21"><span class="st">  </span><span class="co"># Reorder by year so that the earliest year comes first</span></a>
+<a class="sourceLine" id="cb40-22" title="22"><span class="st">  </span><span class="kw">arrange</span>(disease, state, year) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-23" title="23"><span class="st">  </span><span class="co"># &quot;Widen&quot; the data for a nicer table</span></a>
+<a class="sourceLine" id="cb40-24" title="24"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> year, <span class="dt">values_from =</span> ave_weekly_count)</a></code></pre></div>
+</div>
+<div id="bold-columns-or-rows" class="section level2">
+<h2><span class="header-section-number">5.4</span> Bold columns or rows</h2>
+<p>When tables have a lot of content, you may want to highlight elements to draw attention to them. This example uses data from the <code>AmesHousing</code> package.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb41-2" title="2"><span class="kw">library</span>(AmesHousing)</a>
+<a class="sourceLine" id="cb41-3" title="3"></a>
+<a class="sourceLine" id="cb41-4" title="4">top_neighborhoods &lt;-<span class="st"> </span><span class="kw">make_ames</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-5" title="5"><span class="st">  </span><span class="kw">filter</span>(Year_Sold <span class="op">==</span><span class="st"> </span><span class="dv">2010</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(Neighborhood) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">Home_Sales =</span> <span class="kw">n</span>(),</a>
+<a class="sourceLine" id="cb41-8" title="8">            <span class="dt">Total =</span> scales<span class="op">::</span><span class="kw">dollar</span>(<span class="kw">sum</span>(Sale_Price))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-9" title="9"><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>Home_Sales) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-10" title="10"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>)</a></code></pre></div>
 <p>The column_spec() function allows the selection of a column and then a specification for the look. For example, this is a <strong>bold</strong> treatment for the third column.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">top_neighborhoods <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb41-2" title="2"><span class="st">  </span><span class="kw">kable</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb41-3" title="3"><span class="st">  </span><span class="kw">kable_styling</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb41-4" title="4"><span class="st">  </span><span class="kw">column_spec</span>(<span class="dv">3</span>, <span class="dt">bold =</span> T) </a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1">top_neighborhoods <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-2" title="2"><span class="st">  </span><span class="kw">kable</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-3" title="3"><span class="st">  </span><span class="kw">kable_styling</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-4" title="4"><span class="st">  </span><span class="kw">column_spec</span>(<span class="dv">3</span>, <span class="dt">bold =</span> T) </a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1644,10 +1678,10 @@ $3,043,600
 </table>
 <p>The row_spec() function allows the selection of rows and a specification for a style.
 For greater emphasis, this example sets a background fill color and the font color.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1">top_neighborhoods <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-2" title="2"><span class="st">  </span><span class="kw">kable</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-3" title="3"><span class="st">  </span><span class="kw">kable_styling</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-4" title="4"><span class="st">  </span><span class="kw">row_spec</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">bold =</span> T, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">background =</span> <span class="st">&quot;#D7261E&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1">top_neighborhoods <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-2" title="2"><span class="st">  </span><span class="kw">kable</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-3" title="3"><span class="st">  </span><span class="kw">kable_styling</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-4" title="4"><span class="st">  </span><span class="kw">row_spec</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">bold =</span> T, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">background =</span> <span class="st">&quot;#D7261E&quot;</span>)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1755,17 +1789,17 @@ $3,043,600
 </table>
 </div>
 <div id="dynamically-make-changes" class="section level2">
-<h2><span class="header-section-number">5.4</span> Dynamically make changes</h2>
+<h2><span class="header-section-number">5.5</span> Dynamically make changes</h2>
 <p>You might want to make changes to your tables that depend on features of your data that aren’t known in advance or can’t be hardcoded.</p>
 <p>Let’s look at the <code>comma_survey</code> data set, which polled Americans on the oxford comma and other grammatical concepts. In particular, we’ll look at the education of those who care about the debate of whether “data” is a singular or plural noun:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1"><span class="kw">library</span>(fivethirtyeight)</a>
-<a class="sourceLine" id="cb43-2" title="2"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb43-3" title="3"></a>
-<a class="sourceLine" id="cb43-4" title="4">data_noun &lt;-<span class="st"> </span>comma_survey <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb43-5" title="5"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(care_data)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb43-6" title="6"><span class="st">  </span><span class="kw">select</span>(education, care_data)</a>
-<a class="sourceLine" id="cb43-7" title="7"></a>
-<a class="sourceLine" id="cb43-8" title="8">data_noun</a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1"><span class="kw">library</span>(fivethirtyeight)</a>
+<a class="sourceLine" id="cb44-2" title="2"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb44-3" title="3"></a>
+<a class="sourceLine" id="cb44-4" title="4">data_noun &lt;-<span class="st"> </span>comma_survey <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb44-5" title="5"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(care_data)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb44-6" title="6"><span class="st">  </span><span class="kw">select</span>(education, care_data)</a>
+<a class="sourceLine" id="cb44-7" title="7"></a>
+<a class="sourceLine" id="cb44-8" title="8">data_noun</a></code></pre></div>
 <pre><code>## # A tibble: 1,091 x 2
 ##    education                        care_data 
 ##    &lt;ord&gt;                            &lt;ord&gt;     
@@ -1782,20 +1816,20 @@ $3,043,600
 ## # … with 1,081 more rows</code></pre>
 <p>We want to make a table of what percent, by education, answered each of “Not much”, “Not at all”, “Some”, and “A lot” to the question: “How much, if at all, do you care about the debate over the use of the word”data" as a singular or plural noun?".</p>
 <p>First, we need to do some wrangling to replace <code>NA</code> values of <code>Education</code> with “Education unknown”, and to calculate the percent of each response.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="kw">library</span>(scales)</a>
-<a class="sourceLine" id="cb45-2" title="2"></a>
-<a class="sourceLine" id="cb45-3" title="3">data_noun_percent &lt;-<span class="st"> </span>data_noun <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb45-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">education =</span> <span class="kw">fct_explicit_na</span>(education, <span class="dt">na_level =</span> <span class="st">&quot;Education unknown&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb45-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(education, care_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb45-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb45-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb45-8" title="8">    <span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n),</a>
-<a class="sourceLine" id="cb45-9" title="9">    <span class="dt">percent =</span> <span class="kw">percent</span>(prop)</a>
-<a class="sourceLine" id="cb45-10" title="10">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb45-11" title="11"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb45-12" title="12"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</a>
-<a class="sourceLine" id="cb45-13" title="13"></a>
-<a class="sourceLine" id="cb45-14" title="14">data_noun_percent</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb46-2" title="2"></a>
+<a class="sourceLine" id="cb46-3" title="3">data_noun_percent &lt;-<span class="st"> </span>data_noun <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">education =</span> <span class="kw">fct_explicit_na</span>(education, <span class="dt">na_level =</span> <span class="st">&quot;Education unknown&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(education, care_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb46-8" title="8">    <span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n),</a>
+<a class="sourceLine" id="cb46-9" title="9">    <span class="dt">percent =</span> <span class="kw">percent</span>(prop)</a>
+<a class="sourceLine" id="cb46-10" title="10">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-11" title="11"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-12" title="12"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</a>
+<a class="sourceLine" id="cb46-13" title="13"></a>
+<a class="sourceLine" id="cb46-14" title="14">data_noun_percent</a></code></pre></div>
 <pre><code>## # A tibble: 24 x 4
 ##    education                        care_data    prop percent
 ##    &lt;ord&gt;                            &lt;ord&gt;       &lt;dbl&gt; &lt;chr&gt;  
@@ -1811,14 +1845,14 @@ $3,043,600
 ## 10 Some college or Associate degree Not much   0.403  40.3%  
 ## # … with 14 more rows</code></pre>
 <p>Then reshape the data:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1">data_noun_percent_wide &lt;-<span class="st"> </span>data_noun_percent <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb47-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>prop) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb47-3" title="3"><span class="st">  </span><span class="kw">pivot_wider</span>(</a>
-<a class="sourceLine" id="cb47-4" title="4">    <span class="dt">names_from =</span> <span class="st">&quot;care_data&quot;</span>,</a>
-<a class="sourceLine" id="cb47-5" title="5">    <span class="dt">values_from =</span> <span class="st">&quot;percent&quot;</span></a>
-<a class="sourceLine" id="cb47-6" title="6">  )</a>
-<a class="sourceLine" id="cb47-7" title="7"></a>
-<a class="sourceLine" id="cb47-8" title="8">data_noun_percent_wide</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1">data_noun_percent_wide &lt;-<span class="st"> </span>data_noun_percent <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb48-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>prop) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb48-3" title="3"><span class="st">  </span><span class="kw">pivot_wider</span>(</a>
+<a class="sourceLine" id="cb48-4" title="4">    <span class="dt">names_from =</span> <span class="st">&quot;care_data&quot;</span>,</a>
+<a class="sourceLine" id="cb48-5" title="5">    <span class="dt">values_from =</span> <span class="st">&quot;percent&quot;</span></a>
+<a class="sourceLine" id="cb48-6" title="6">  )</a>
+<a class="sourceLine" id="cb48-7" title="7"></a>
+<a class="sourceLine" id="cb48-8" title="8">data_noun_percent_wide</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 5
 ##   education                        `Not at all` `Not much` Some   `A lot`
 ##   &lt;ord&gt;                            &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;  &lt;chr&gt;  
@@ -1829,14 +1863,14 @@ $3,043,600
 ## 5 Graduate degree                  13.0%        37.3%      31.9%  17.8%  
 ## 6 Education unknown                18%          31%        32%    18%</code></pre>
 <p>Then, we can make a table. We’ll clean up the column names, make sure the education column is left aligned and the responses are right aligned, and add a top header with the question “How much, if at all, do you care about the debate over the use of the word ‘data’ as a singular or plural noun?” above the “Not at all”, “Not much”, “Some”, and “A lot” columns:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1"><span class="kw">library</span>(kableExtra)</a>
-<a class="sourceLine" id="cb49-2" title="2"></a>
-<a class="sourceLine" id="cb49-3" title="3">data_noun_percent_wide <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb49-4" title="4"><span class="st">  </span><span class="kw">kable</span>(</a>
-<a class="sourceLine" id="cb49-5" title="5">    <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Education&quot;</span>, <span class="st">&quot;Not at all&quot;</span>, <span class="st">&quot;Not much&quot;</span>, <span class="st">&quot;Some&quot;</span>, <span class="st">&quot;A lot&quot;</span>),</a>
-<a class="sourceLine" id="cb49-6" title="6">    <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;lrrrr&quot;</span>)</a>
-<a class="sourceLine" id="cb49-7" title="7">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb49-8" title="8"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> <span class="kw">c</span>(<span class="st">&quot; &quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span> =<span class="st"> </span><span class="dv">4</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1"><span class="kw">library</span>(kableExtra)</a>
+<a class="sourceLine" id="cb50-2" title="2"></a>
+<a class="sourceLine" id="cb50-3" title="3">data_noun_percent_wide <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb50-4" title="4"><span class="st">  </span><span class="kw">kable</span>(</a>
+<a class="sourceLine" id="cb50-5" title="5">    <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Education&quot;</span>, <span class="st">&quot;Not at all&quot;</span>, <span class="st">&quot;Not much&quot;</span>, <span class="st">&quot;Some&quot;</span>, <span class="st">&quot;A lot&quot;</span>),</a>
+<a class="sourceLine" id="cb50-6" title="6">    <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;lrrrr&quot;</span>)</a>
+<a class="sourceLine" id="cb50-7" title="7">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb50-8" title="8"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> <span class="kw">c</span>(<span class="st">&quot; &quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span> =<span class="st"> </span><span class="dv">4</span>))</a></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -1974,16 +2008,16 @@ Education unknown
 <p>Doing this required us to hardcode in the question responses and the number of columns (4) corresponding to them (both for the header above, and for the column alignment). Our code is now fragile if this isn’t known in advance, or could change!</p>
 <p>Instead, we can think about it this way: we know that the first column contains Education and the rest contain the answers. So, we can set the column names, alignment, and the header using attributes of <code>data_noun_percent_wide</code>.</p>
 <p>For <code>col.names</code> and <code>align</code>, we can quickly use <code>names()</code> and <code>ncol()</code>, respectively:</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1">k &lt;-<span class="st"> </span>data_noun_percent_wide <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb50-2" title="2"><span class="st">  </span><span class="kw">kable</span>(</a>
-<a class="sourceLine" id="cb50-3" title="3">    <span class="dt">col.names =</span> <span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb50-4" title="4">      <span class="st">&quot;Education&quot;</span>,</a>
-<a class="sourceLine" id="cb50-5" title="5">      <span class="kw">names</span>(data_noun_percent_wide)[<span class="op">-</span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb50-6" title="6">    ),</a>
-<a class="sourceLine" id="cb50-7" title="7">    <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;l&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;r&quot;</span>, <span class="kw">ncol</span>(data_noun_percent_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb50-8" title="8">  )</a>
-<a class="sourceLine" id="cb50-9" title="9"></a>
-<a class="sourceLine" id="cb50-10" title="10">k</a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">k &lt;-<span class="st"> </span>data_noun_percent_wide <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-2" title="2"><span class="st">  </span><span class="kw">kable</span>(</a>
+<a class="sourceLine" id="cb51-3" title="3">    <span class="dt">col.names =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb51-4" title="4">      <span class="st">&quot;Education&quot;</span>,</a>
+<a class="sourceLine" id="cb51-5" title="5">      <span class="kw">names</span>(data_noun_percent_wide)[<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb51-6" title="6">    ),</a>
+<a class="sourceLine" id="cb51-7" title="7">    <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;l&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;r&quot;</span>, <span class="kw">ncol</span>(data_noun_percent_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb51-8" title="8">  )</a>
+<a class="sourceLine" id="cb51-9" title="9"></a>
+<a class="sourceLine" id="cb51-10" title="10">k</a></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -2110,11 +2144,11 @@ Education unknown
 </tbody>
 </table>
 <p>And for the header, we can create a <em>named vector</em> with the number of columns each header spans (again, using <code>ncol()</code>):</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">k_header &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(data_noun_percent_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb51-2" title="2"><span class="kw">names</span>(k_header) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span>)</a>
-<a class="sourceLine" id="cb51-3" title="3"></a>
-<a class="sourceLine" id="cb51-4" title="4">k <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb51-5" title="5"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> k_header)</a></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">k_header &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(data_noun_percent_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb52-2" title="2"><span class="kw">names</span>(k_header) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span>)</a>
+<a class="sourceLine" id="cb52-3" title="3"></a>
+<a class="sourceLine" id="cb52-4" title="4">k <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-5" title="5"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> k_header)</a></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -2252,12 +2286,12 @@ Education unknown
 <p>Now our code is more robust and can easily adapt to changes in the data (e.g., if there were additional responses).</p>
 <p>We might want to do other things, too, like bold the cell with the highest percent for each of the levels of Education.</p>
 <p>To do this, we can use <code>cell_spec()</code> to set values of <code>percent</code> to bold if they are the highest value of <code>prop</code> (the unformatted <code>percent</code>) for their level of <code>education</code>.</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">data_noun_bold_highest_prop &lt;-<span class="st"> </span>data_noun_percent <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(education) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">highest_prop =</span> <span class="kw">max</span>(prop)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> <span class="kw">cell_spec</span>(percent, <span class="dt">format =</span> <span class="st">&quot;html&quot;</span>, <span class="dt">bold =</span> prop <span class="op">==</span><span class="st"> </span>highest_prop))</a>
-<a class="sourceLine" id="cb52-5" title="5"></a>
-<a class="sourceLine" id="cb52-6" title="6">data_noun_bold_highest_prop</a></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1">data_noun_bold_highest_prop &lt;-<span class="st"> </span>data_noun_percent <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(education) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">highest_prop =</span> <span class="kw">max</span>(prop)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> <span class="kw">cell_spec</span>(percent, <span class="dt">format =</span> <span class="st">&quot;html&quot;</span>, <span class="dt">bold =</span> prop <span class="op">==</span><span class="st"> </span>highest_prop))</a>
+<a class="sourceLine" id="cb53-5" title="5"></a>
+<a class="sourceLine" id="cb53-6" title="6">data_noun_bold_highest_prop</a></code></pre></div>
 <pre><code>## # A tibble: 24 x 5
 ## # Groups:   education [6]
 ##    education           care_data   prop percent                     highest_prop
@@ -2275,23 +2309,23 @@ Education unknown
 ## # … with 14 more rows</code></pre>
 <p>This applies HTML formatting to <code>percent</code> (specifically, bold formatting to the highest value for each level of <code>education</code>) that will be picked up by kableExtra.</p>
 <p>Then, we again reshape the data to a wide format and create a table. This time, we need to set <code>escape = FALSE</code> in <code>kable()</code> to let it know that there is HTML in the cells that should <em>not</em> be escaped (i.e., not treated as regular text):</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">data_noun_bold_highest_prop_wide &lt;-<span class="st"> </span>data_noun_bold_highest_prop <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>prop, <span class="op">-</span>highest_prop) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-3" title="3"><span class="st">  </span><span class="kw">pivot_wider</span>(</a>
-<a class="sourceLine" id="cb54-4" title="4">    <span class="dt">names_from =</span> <span class="st">&quot;care_data&quot;</span>,</a>
-<a class="sourceLine" id="cb54-5" title="5">    <span class="dt">values_from =</span> <span class="st">&quot;percent&quot;</span></a>
-<a class="sourceLine" id="cb54-6" title="6">  )</a>
-<a class="sourceLine" id="cb54-7" title="7"></a>
-<a class="sourceLine" id="cb54-8" title="8">k_header &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(data_noun_bold_highest_prop_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb54-9" title="9"><span class="kw">names</span>(k_header) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span>)</a>
-<a class="sourceLine" id="cb54-10" title="10"></a>
-<a class="sourceLine" id="cb54-11" title="11">data_noun_bold_highest_prop_wide <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-12" title="12"><span class="st">  </span><span class="kw">kable</span>(<span class="st">&quot;html&quot;</span>,</a>
-<a class="sourceLine" id="cb54-13" title="13">        <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Education&quot;</span>, <span class="kw">names</span>(data_noun_bold_highest_prop_wide)[<span class="op">-</span><span class="dv">1</span>]),</a>
-<a class="sourceLine" id="cb54-14" title="14">        <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;l&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;r&quot;</span>, <span class="kw">ncol</span>(data_noun_bold_highest_prop_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)),</a>
-<a class="sourceLine" id="cb54-15" title="15">        <span class="dt">escape =</span> <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb54-16" title="16">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-17" title="17"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> k_header)</a></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1">data_noun_bold_highest_prop_wide &lt;-<span class="st"> </span>data_noun_bold_highest_prop <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>prop, <span class="op">-</span>highest_prop) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-3" title="3"><span class="st">  </span><span class="kw">pivot_wider</span>(</a>
+<a class="sourceLine" id="cb55-4" title="4">    <span class="dt">names_from =</span> <span class="st">&quot;care_data&quot;</span>,</a>
+<a class="sourceLine" id="cb55-5" title="5">    <span class="dt">values_from =</span> <span class="st">&quot;percent&quot;</span></a>
+<a class="sourceLine" id="cb55-6" title="6">  )</a>
+<a class="sourceLine" id="cb55-7" title="7"></a>
+<a class="sourceLine" id="cb55-8" title="8">k_header &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(data_noun_bold_highest_prop_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb55-9" title="9"><span class="kw">names</span>(k_header) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;How much, if at all, do you care about the debate over the use of the word &#39;data&#39; as a singular or plural noun?&quot;</span>)</a>
+<a class="sourceLine" id="cb55-10" title="10"></a>
+<a class="sourceLine" id="cb55-11" title="11">data_noun_bold_highest_prop_wide <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-12" title="12"><span class="st">  </span><span class="kw">kable</span>(<span class="st">&quot;html&quot;</span>,</a>
+<a class="sourceLine" id="cb55-13" title="13">        <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Education&quot;</span>, <span class="kw">names</span>(data_noun_bold_highest_prop_wide)[<span class="op">-</span><span class="dv">1</span>]),</a>
+<a class="sourceLine" id="cb55-14" title="14">        <span class="dt">align =</span> <span class="kw">c</span>(<span class="st">&quot;l&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;r&quot;</span>, <span class="kw">ncol</span>(data_noun_bold_highest_prop_wide) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb55-15" title="15">        <span class="dt">escape =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb55-16" title="16">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-17" title="17"><span class="st">  </span><span class="kw">add_header_above</span>(<span class="dt">header =</span> k_header)</a></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -2429,25 +2463,25 @@ Education unknown
 <p>This way, we can apply formatting based on specific values of the data, which may change.</p>
 </div>
 <div id="take-advantage-of-pdf-only-features" class="section level2">
-<h2><span class="header-section-number">5.5</span> Take advantage of PDF-only features</h2>
+<h2><span class="header-section-number">5.6</span> Take advantage of PDF-only features</h2>
 <p>Example code that will allow us to embed PDF-only table output. This
 uses a couple of basic examples of doing this, with code from the <code>dslabs</code> package.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb55-2" title="2"><span class="kw">library</span>(dslabs)</a>
-<a class="sourceLine" id="cb55-3" title="3"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a>
-<a class="sourceLine" id="cb55-4" title="4">top_<span class="dv">10</span>_data &lt;-<span class="st"> </span>us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb55-5" title="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb55-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb55-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total_count =</span> <span class="kw">sum</span>(count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb55-8" title="8"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total_count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb55-9" title="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb56-2" title="2"><span class="kw">library</span>(dslabs)</a>
+<a class="sourceLine" id="cb56-3" title="3"><span class="kw">data</span>(<span class="st">&quot;us_contagious_diseases&quot;</span>)</a>
+<a class="sourceLine" id="cb56-4" title="4">top_<span class="dv">10</span>_data &lt;-<span class="st"> </span>us_contagious_diseases <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb56-5" title="5"><span class="st">  </span><span class="kw">filter</span>(disease <span class="op">==</span><span class="st"> &quot;Pertussis&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb56-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb56-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total_count =</span> <span class="kw">sum</span>(count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb56-8" title="8"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total_count)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb56-9" title="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) </a></code></pre></div>
 <p>Then, you can use the <code>kable</code> function to create a basic PDF table:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb56-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb57-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>) </a></code></pre></div>
 <p>The <code>booktabs = TRUE</code> option, if you include it in the <code>kable</code> function call, will give
 some cleaner default formatting for the table:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb57-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>, <span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1">top_<span class="dv">10</span>_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb58-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>, <span class="dt">booktabs =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
 
 </div>
 </div>
