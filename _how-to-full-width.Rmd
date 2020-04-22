@@ -1,1 +1,31 @@
 ## Make a table full width
+
+By default, HTML tables span the full width of page, as seen in the example from section \@ref(create-a-basic-table):
+
+```{r}
+top_10_data %>% 
+  kable() 
+```
+
+You can specify `full_width = FALSE` in the `kable_styling` function to create more narrow tables. 
+
+```{r}
+
+top_10_data %>% 
+  kable() %>% 
+  kable_styling(full_width = FALSE)
+
+```
+
+For more control over column widths, you can alter the `width` argument of the `column_spec()` function. Below, we specify the width of the first column.
+
+```{r}
+
+top_10_data %>% 
+  kable() %>% 
+  kable_styling(full_width = FALSE) %>% 
+  column_spec(1, width = "30em")
+
+```
+
+Note that for PDF output, tables do **not** span the full width of the page by default. Thus, you must set `full_width = TRUE` in the `kable_styling` function. See the third example in section \@ref(take-advantage-of-pdf-only-features).
