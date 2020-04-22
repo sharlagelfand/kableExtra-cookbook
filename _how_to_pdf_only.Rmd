@@ -40,6 +40,32 @@ top_10_data %>%
 include_graphics(path = "pdf_table_figures/ex_2.png")
 ```
 
+For PDF tables that are too long to fit on one page, you can specify `longtable = TRUE` in the `kable` function call to split the table across multiple pages. `kable_styling(latex_options = c("repeat_header"))`  adds the header row all subsequent pages containing the long table.
 
+```{r echo=1:13, eval=FALSE}
+library(tidyverse)
+library(fivethirtyeight)
+library(kableExtra)
 
+spi_global_rankings %>% 
+  filter(league %in% c("Spanish Primera Division", 
+                       "Barclays Premier League",
+                       "German Bundesliga",
+                       "Italy Serie A")) %>% 
+  arrange(rank) %>% 
+  kable(format = "latex", booktabs = TRUE, longtable = TRUE,
+        caption = "Global Club Soccer Rankings: Top Four Leagues") %>% 
+  kable_styling(latex_options = c("repeat_header"))
 
+spi_global_rankings %>% 
+  filter(league %in% c("Spanish Primera Division", 
+                       "Barclays Premier League",
+                       "German Bundesliga",
+                       "Italy Serie A")) %>% 
+  arrange(rank) %>% 
+  kable(format = "latex", booktabs = TRUE, longtable = TRUE,
+        caption = "Global Club Soccer Rankings: Top Four Leagues") %>% 
+  kable_styling(latex_options = c("repeat_header")) %>% 
+  save_kable(file = "pdf_table_figures/ex_3.png")
+include_graphics(path = "pdf_table_figures/ex_3.png")
+```
